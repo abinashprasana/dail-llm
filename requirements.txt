@@ -1,0 +1,9 @@
+torch
+numpy
+scikit-learn
+matplotlib
+tqdm
+streamlit
+ftfy
+nltk
+seaborn

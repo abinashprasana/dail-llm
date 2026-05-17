@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dail-llm"
+version = "0.1.0"
+description = "A character-level transformer trained on Irish parliamentary debates"
+authors = [
+  { name = "Dáil LLM", email = "user@example.com" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "torch",
+    "numpy",
+    "scikit-learn",
+    "matplotlib",
+    "tqdm",
+    "streamlit",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "flake8"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["dail_llm*"]

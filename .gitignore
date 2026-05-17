@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+data/
+dataverse_files/
+legacy/
+.DS_Store
