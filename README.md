@@ -36,15 +36,9 @@ The project also includes a four tab Streamlit dashboard where you can type a pr
 
 ## 🎬 Live Demo
 
-<div align="center">
-
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://abinashprasana-dail-llm-dail-llmappstreamlit-app-um65t7.streamlit.app/)
-
-**[→ Open the live app](https://abinashprasana-dail-llm-dail-llmappstreamlit-app-um65t7.streamlit.app/)**
+[![Open Live App](https://img.shields.io/badge/Open%20Live%20App%20%F0%9F%9A%80-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://abinashprasana-dail-llm-dail-llmappstreamlit-app-um65t7.streamlit.app/)
 
 The app is deployed and running on Streamlit Cloud. No setup needed. You can generate parliamentary text from a seed prompt, visualise attention weights as a heatmap across all 4 layers and 8 heads, and browse the full evaluation results and training curves.
-
-</div>
 
 ---
 
