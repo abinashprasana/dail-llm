@@ -76,8 +76,8 @@ def visualise_attention(
         Path(save_path).parent.mkdir(parents=True, exist_ok=True)
         fig.savefig(str(save_path), dpi=150)
         plt.close(fig)
-    else:
-        plt.show()
+        return None
+    return fig
 
 
 def visualise_all_heads(
@@ -140,5 +140,5 @@ def visualise_all_heads(
         Path(save_path).parent.mkdir(parents=True, exist_ok=True)
         fig.savefig(str(save_path), dpi=150)
         plt.close(fig)
-    else:
-        plt.show()
+        return None
+    return fig
