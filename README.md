@@ -6,7 +6,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-From%20Scratch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org)
-[![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io)
+[![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://abinashprasana-dail-llm-dail-llmappstreamlit-app-um65t7.streamlit.app/)
 [![Perplexity](https://img.shields.io/badge/Perplexity-4.07-2ea44f?style=for-the-badge)](.)
 [![Status](https://img.shields.io/badge/Status-Completed-2ea44f?style=for-the-badge)](.)
 
@@ -34,8 +34,17 @@ The project also includes a four tab Streamlit dashboard where you can type a pr
 
 ---
 
-## 🎬 Demo
+## 🎬 Live Demo
 
+<div align="center">
+
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://abinashprasana-dail-llm-dail-llmappstreamlit-app-um65t7.streamlit.app/)
+
+**[→ Open the live app](https://abinashprasana-dail-llm-dail-llmappstreamlit-app-um65t7.streamlit.app/)**
+
+The app is deployed and running on Streamlit Cloud. No setup needed. You can generate parliamentary text from a seed prompt, visualise attention weights as a heatmap across all 4 layers and 8 heads, and browse the full evaluation results and training curves.
+
+</div>
 
 ---
 
@@ -79,6 +88,43 @@ Only speeches from 1950 onwards were used because earlier debates contain a high
 ## 🧠 Model Architecture
 
 The model is called `DailTransformerLM` and is a decoder-only transformer built entirely from scratch in PyTorch with no pretrained components.
+
+```mermaid
+flowchart TD
+    classDef io      fill:#1d4ed8,color:#fff,stroke:#1e40af,rx:8
+    classDef embed   fill:#4f46e5,color:#fff,stroke:#4338ca,rx:8
+    classDef block   fill:#7c3aed,color:#fff,stroke:#6d28d9,rx:8
+    classDef attn    fill:#6d28d9,color:#fff,stroke:#5b21b6,rx:8
+    classDef ff      fill:#9333ea,color:#fff,stroke:#7e22ce,rx:8
+    classDef head    fill:#065f46,color:#fff,stroke:#064e3b,rx:8
+
+    A["🔤  Input Characters\nraw text prompt"]:::io
+    B["Token Embedding\n256-dim lookup table"]:::embed
+    C["Positional Embedding\n256-dim · learned"]:::embed
+    D["➕  Add Embeddings\n+ Dropout 0.1"]:::embed
+
+    A --> B
+    A --> C
+    B --> D
+    C --> D
+
+    D --> BLK
+
+    subgraph BLK["🔄  Transformer Block  ×4"]
+        direction TB
+        LN1["LayerNorm"]:::block
+        MHA["Multi-Head Self-Attention\n8 heads  ·  32-dim per head\ncausal lower-triangular mask"]:::attn
+        R1["➕  Residual connection"]:::block
+        LN2["LayerNorm"]:::block
+        FFN["Feed-Forward Network\n256 → 1024 → 256\nGELU · Dropout 0.1"]:::ff
+        R2["➕  Residual connection"]:::block
+        LN1 --> MHA --> R1 --> LN2 --> FFN --> R2
+    end
+
+    BLK --> FLN["Final LayerNorm"]:::embed
+    FLN --> LIN["Linear Projection\nvocab size ≈ 90 characters"]:::head
+    LIN --> OUT["🔤  Next Character\npredicted token"]:::io
+```
 
 <div align="center">
 
