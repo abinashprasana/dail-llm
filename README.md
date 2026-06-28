@@ -18,12 +18,6 @@
 
 ---
 
-## 📋 Table of Contents
-
-[📖 What This Is](#-what-this-project-is) · [🗃️ Dataset](#️-dataset) · [🧠 Architecture](#-model-architecture) · [📊 Results](#-evaluation-results) · [💬 Samples](#-generated-samples) · [📁 Structure](#-project-structure) · [⚙️ How to Run](#️-how-to-run) · [⚠️ Limitations](#️-limitations)
-
----
-
 ## 📖 What This Project Is
 
 I built this project to understand how transformers actually work, not just in theory but from the ground up. Instead of using a pretrained model or someone else's tokenizer, I wrote everything from scratch in PyTorch and trained it on real speeches from the Dáil Éireann, the lower house of the Irish parliament. The Dáil has been sitting since January 1919, and the dataset records every speech made by every elected TD across nearly a century of Irish legislative history.
