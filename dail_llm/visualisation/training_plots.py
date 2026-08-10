@@ -2,16 +2,16 @@
 Training curve plotting utilities.
 """
 from __future__ import annotations
+
 from pathlib import Path
-from typing import List
 
 import matplotlib.pyplot as plt
 
 
 def plot_loss_curve(
-    steps: List[int],
-    train_losses: List[float],
-    val_losses: List[float],
+    steps: list[int],
+    train_losses: list[float],
+    val_losses: list[float],
     save_path: Path,
 ) -> None:
     fig, ax = plt.subplots(figsize=(8, 5))
@@ -30,12 +30,19 @@ def plot_loss_curve(
 
 
 def plot_val_perplexity(
-    steps: List[int],
-    perplexities: List[float],
+    steps: list[int],
+    perplexities: list[float],
     save_path: Path,
 ) -> None:
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(steps, perplexities, label="val perplexity", color="darkorange", marker="^", markersize=4)
+    ax.plot(
+        steps,
+        perplexities,
+        label="val perplexity",
+        color="darkorange",
+        marker="^",
+        markersize=4,
+    )
     ax.set_xlabel("Training step")
     ax.set_ylabel("Perplexity")
     ax.set_title("Validation Perplexity over Training")

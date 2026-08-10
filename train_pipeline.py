@@ -9,7 +9,7 @@ Runs in order:
   3. train.py          — train the character-level transformer
   4. evaluate.py       — generate evaluation report
 
-Then prints instructions to launch the Streamlit app.
+Then prints instructions to launch the API and compiled web interface.
 """
 import subprocess
 import sys
@@ -56,8 +56,8 @@ def main():
     print("\n" + "=" * 60)
     print("  Training complete.")
     print("=" * 60)
-    print("\nTo launch the Streamlit dashboard, run:")
-    print("\n    streamlit run dail_llm/app/streamlit_app.py\n")
+    print("\nBuild the frontend, then launch the complete product with:")
+    print("\n    uvicorn dail_llm.api.app:app --host 127.0.0.1 --port 8000 --workers 1\n")
 
 
 if __name__ == "__main__":

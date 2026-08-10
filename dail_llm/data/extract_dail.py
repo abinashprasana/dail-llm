@@ -13,11 +13,19 @@ Dependencies: ftfy  (pip install ftfy)
 """
 
 import csv
-import os
+import hashlib
+import json
 import re
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
+
+from dail_llm.config import (
+    DATASET_CITATION,
+    DATASET_DOI,
+    DATASET_MANIFEST_PATH,
+    DATASET_NAME,
+)
 
 try:
     import ftfy
@@ -60,7 +68,11 @@ def _clean_speech(text: str) -> str:
     return text
 
 
-def extract(tab_file: Path = TAB_FILE, out_file: Path = OUT_FILE) -> None:
+def extract(
+    tab_file: Path = TAB_FILE,
+    out_file: Path = OUT_FILE,
+    manifest_path: Path = DATASET_MANIFEST_PATH,
+) -> None:
     if not tab_file.exists():
         print(f"ERROR: Source file not found:\n  {tab_file}")
         sys.exit(1)
@@ -169,6 +181,37 @@ def extract(tab_file: Path = TAB_FILE, out_file: Path = OUT_FILE) -> None:
                 date_max = date_str
             speaker_counts[speaker] += 1
 
+    source_bytes = out_file.read_bytes()
+    source_text = out_file.read_text(encoding="utf-8")
+    clean_sha256 = hashlib.sha256(source_bytes).hexdigest()
+    manifest = {
+        "schema_version": 1,
+        "dataset": {
+            "name": DATASET_NAME,
+            "citation": DATASET_CITATION,
+            "doi": DATASET_DOI,
+            "full_date_range": "1919-2013",
+        },
+        "corpus": {
+            "minimum_year": CUTOFF_YEAR,
+            "selected_date_min": date_min,
+            "selected_date_max": date_max,
+            "rows_processed": rows_processed,
+            "accepted_speeches": speeches_kept,
+            "source_file_bytes": len(source_bytes),
+            "source_file_characters": len(source_text),
+            "source_sha256": clean_sha256,
+            "target_bytes": TARGET_BYTES,
+            "minimum_speech_characters": MIN_SPEECH_LEN,
+            "maximum_non_ascii_ratio": MAX_NON_ASCII_RATIO,
+        },
+    }
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
     # ---------------------------------------------------------------------------
     # Final summary
     # ---------------------------------------------------------------------------
@@ -179,8 +222,9 @@ def extract(tab_file: Path = TAB_FILE, out_file: Path = OUT_FILE) -> None:
     print(f"  Total rows processed : {rows_processed:,}")
     print(f"  Speeches kept        : {speeches_kept:,}")
     print(f"  Total characters     : {bytes_written:,}  ({mb_written:.2f} MB)")
-    print(f"  Date range           : {date_min}  →  {date_max}")
+    print(f"  Date range           : {date_min} to {date_max}")
     print(f"  Output file          : {out_file}")
+    print(f"  Dataset manifest     : {manifest_path}")
     print()
     print("  Top 5 speakers by speech count:")
     for name, count in speaker_counts.most_common(5):

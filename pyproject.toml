@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dail-llm"
-version = "0.1.0"
+version = "0.2.0"
 description = "A character-level transformer trained on Irish parliamentary debates"
 authors = [
   { name = "Dáil LLM", email = "user@example.com" },
@@ -14,23 +14,50 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.12"
 dependencies = [
-    "torch",
-    "numpy",
-    "scikit-learn",
-    "matplotlib",
-    "tqdm",
-    "streamlit",
+    "torch>=2.6,<3",
+    "fastapi>=0.116,<1",
+    "uvicorn[standard]>=0.35,<1",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest",
-    "black",
-    "flake8"
+    "pytest>=8.4,<9",
+    "pytest-asyncio>=1,<2",
+    "httpx>=0.28,<1",
+    "ruff>=0.12,<1",
 ]
+legacy = [
+    "streamlit>=1.46,<2",
+    "seaborn>=0.13,<1",
+    "matplotlib>=3.10,<4",
+]
+research = [
+    "ftfy>=6.3,<7",
+    "matplotlib>=3.10,<4",
+    "numpy>=2,<3",
+    "scikit-learn>=1.6,<2",
+    "tqdm>=4.67,<5",
+]
+
+[project.scripts]
+dail-api = "dail_llm.api.app:run"
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["dail_llm*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "integration: uses the trained checkpoint",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+exclude = ["legacy"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

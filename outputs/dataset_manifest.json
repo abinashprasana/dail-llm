@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "dataset": {
+    "name": "Dáil Éireann Parliamentary Debates 1919-2013 (Harvard Dataverse)",
+    "citation": "Proksch, S.O. and Slapin, J.B. (2010). Database of Parliamentary Speeches in Ireland, 1919-2013. Harvard Dataverse.",
+    "doi": "https://doi.org/10.7910/DVN/6MZN76",
+    "full_date_range": "1919-2013"
+  },
+  "corpus": {
+    "minimum_year": 1950,
+    "selected_date_min": "1950-02-15",
+    "selected_date_max": "1950-04-25",
+    "rows_processed": 715582,
+    "accepted_speeches": 9080,
+    "source_file_bytes": 6334226,
+    "source_file_characters": 6316066,
+    "source_sha256": "764307fb9a555c2f635484652729011275d3c9cb0726f00947e959f5f41a017c",
+    "clean_bytes": 6316064,
+    "sha256": "9ec7243e0d1c75c602f5c320f4d75ed7ba569c3e41b2e426e5ae46df87a964a8",
+    "target_bytes": 6291456,
+    "minimum_speech_characters": 50,
+    "maximum_non_ascii_ratio": 0.4,
+    "clean_characters": 6295637
+  },
+  "processing": {
+    "chunk_characters": 1000,
+    "chunk_overlap": 150,
+    "chunk_count": 7960,
+    "validation_ratio": 0.05,
+    "test_ratio": 0.05,
+    "split_characters": {
+      "train": 5666073,
+      "validation": 314782,
+      "test": 314781
+    }
+  }
+}

@@ -2,17 +2,16 @@
 TF-IDF retriever and RAG pipeline for the Dáil LLM project.
 """
 import sqlite3
-from typing import List, Tuple
 from pathlib import Path
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-from config import DB_PATH
+from dail_llm.config import DB_PATH
 
 
 class TfidfRetriever:
-    def __init__(self, texts: List[str]):
+    def __init__(self, texts: list[str]):
         self.texts = texts
         self.vectorizer = TfidfVectorizer(stop_words=None, ngram_range=(1, 2), max_features=20_000)
         if texts:
@@ -20,7 +19,7 @@ class TfidfRetriever:
         else:
             self.matrix = None
 
-    def search(self, query: str, top_k: int = 3) -> List[Tuple[int, float, str]]:
+    def search(self, query: str, top_k: int = 3) -> list[tuple[int, float, str]]:
         if self.matrix is None or not self.texts:
             return []
         qv = self.vectorizer.transform([query])
@@ -29,7 +28,7 @@ class TfidfRetriever:
         return [(int(i), float(sims[i]), self.texts[int(i)]) for i in idxs]
 
 
-def load_chunks_from_sqlite(db_path: Path = DB_PATH) -> List[str]:
+def load_chunks_from_sqlite(db_path: Path = DB_PATH) -> list[str]:
     if not db_path.exists():
         print(f"Warning: Database not found at {db_path}")
         return []

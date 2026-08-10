@@ -4,6 +4,7 @@ Training script for the Dáil Éireann Character-Level Transformer.
     python -m dail_llm.model.train
 """
 import argparse
+import json
 import time
 from pathlib import Path
 
@@ -11,15 +12,26 @@ import numpy as np
 import torch
 from tqdm import tqdm
 
-from config import (
-    TRAIN_MSG_PATH, VAL_MSG_PATH, TEST_MSG_PATH,
-    CKPT_DIR, PLOTS_DIR,
-    BLOCK_SIZE, EMBED_DIM, N_LAYERS, N_HEADS, DROPOUT,
-    BATCH_SIZE, MAX_STEPS, EVAL_EVERY, LEARNING_RATE,
+from dail_llm.config import (
+    BATCH_SIZE,
+    BLOCK_SIZE,
+    CKPT_DIR,
+    DROPOUT,
+    EMBED_DIM,
+    EVAL_EVERY,
+    LEARNING_RATE,
+    MAX_STEPS,
+    N_HEADS,
+    N_LAYERS,
+    PLOTS_DIR,
+    TEST_MSG_PATH,
+    TRAIN_MSG_PATH,
+    TRAINING_HISTORY_PATH,
+    VAL_MSG_PATH,
 )
 from dail_llm.data.tokenizer import CharTokenizer
-from dail_llm.model.transformer import DailTransformerLM
 from dail_llm.eval.metrics import calculate_perplexity
+from dail_llm.model.transformer import DailTransformerLM
 from dail_llm.visualisation.training_plots import plot_loss_curve, plot_val_perplexity
 
 
@@ -123,7 +135,14 @@ def train(args):
             pbar.set_description(f"loss {loss.item():.4f}")
 
         if step % args.eval_every == 0:
-            losses = estimate_loss(model, train_ids, val_ids, args.batch_size, args.block_size, device)
+            losses = estimate_loss(
+                model,
+                train_ids,
+                val_ids,
+                args.batch_size,
+                args.block_size,
+                device,
+            )
             val_ppl = calculate_perplexity(model, val_ids, args.block_size, device)
 
             steps.append(step)
@@ -146,6 +165,18 @@ def train(args):
     # Plots
     plot_loss_curve(steps, train_losses, val_losses, PLOTS_DIR / "loss.png")
     plot_val_perplexity(steps, val_perplexities, PLOTS_DIR / "val_perplexity.png")
+    TRAINING_HISTORY_PATH.write_text(
+        json.dumps(
+            {
+                "steps": steps,
+                "train_loss": train_losses,
+                "validation_loss": val_losses,
+                "validation_perplexity": val_perplexities,
+            },
+            indent=2,
+        ) + "\n",
+        encoding="utf-8",
+    )
 
     elapsed = (time.time() - t0) / 60
     print(f"\nTraining complete in {elapsed:.1f} min")

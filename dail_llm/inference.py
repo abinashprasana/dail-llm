@@ -1,11 +1,11 @@
 """
 High-level interface for loading a checkpoint and generating text.
 """
-import torch
 from pathlib import Path
-from typing import Optional
 
-from config import CKPT_PATH, DEVICE
+import torch
+
+from dail_llm.config import CKPT_PATH, DEVICE
 from dail_llm.data.tokenizer import CharTokenizer
 from dail_llm.model.transformer import DailTransformerLM
 
@@ -14,8 +14,8 @@ class ModelWrapper:
     def __init__(self, checkpoint_path: Path = CKPT_PATH, device: str = DEVICE):
         self.device = torch.device(device)
         self.checkpoint_path = checkpoint_path
-        self.model: Optional[DailTransformerLM] = None
-        self.tokenizer: Optional[CharTokenizer] = None
+        self.model: DailTransformerLM | None = None
+        self.tokenizer: CharTokenizer | None = None
         self.config: dict = {}
         self._load_checkpoint()
 
@@ -23,7 +23,11 @@ class ModelWrapper:
         if not self.checkpoint_path.exists():
             raise FileNotFoundError(f"Checkpoint not found at {self.checkpoint_path}")
         print(f"Loading checkpoint from {self.checkpoint_path}...")
-        ckpt = torch.load(self.checkpoint_path.as_posix(), map_location=self.device)
+        ckpt = torch.load(
+            self.checkpoint_path.as_posix(),
+            map_location=self.device,
+            weights_only=False,
+        )
         self.config = ckpt["config"]
         stoi = ckpt["vocab"]
         self.tokenizer = CharTokenizer("")
@@ -43,6 +47,13 @@ class ModelWrapper:
     def generate(self, prompt: str, max_new_tokens: int = 250, temperature: float = 1.0) -> str:
         if self.model is None or self.tokenizer is None:
             raise RuntimeError("Model is not loaded.")
-        idx = self.tokenizer.encode(prompt).unsqueeze(0).to(self.device)
-        out_idx = self.model.generate(idx, max_new_tokens=max_new_tokens, temperature=temperature)[0]
+        filtered_prompt, _ = self.tokenizer.filter_supported(prompt)
+        if not filtered_prompt:
+            raise ValueError("Prompt does not contain any characters supported by this model.")
+        idx = self.tokenizer.encode(filtered_prompt).unsqueeze(0).to(self.device)
+        out_idx = self.model.generate(
+            idx,
+            max_new_tokens=max_new_tokens,
+            temperature=temperature,
+        )[0]
         return self.tokenizer.decode(out_idx)

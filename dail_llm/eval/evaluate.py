@@ -1,30 +1,28 @@
-"""
-Standalone evaluation runner.
-
-    python -m dail_llm.eval.evaluate
-
-Loads the best checkpoint, runs perplexity + BLEU + repetition on
-the held-out test set, generates 5 sample texts, and saves a
-markdown results table to outputs/evaluation_results.md.
-"""
+"""Evaluate the trained character model and write JSON plus Markdown reports."""
 from __future__ import annotations
-import random
-import time
+
+import json
+from datetime import UTC, datetime
 from pathlib import Path
 
 import torch
 
-from config import (
-    CKPT_DIR, TEST_MSG_PATH, EVAL_RESULTS_PATH, DEVICE,
+from dail_llm.config import (
+    CKPT_DIR,
+    DATASET_MANIFEST_PATH,
+    DEVICE,
+    EVAL_RESULTS_JSON_PATH,
+    EVAL_RESULTS_PATH,
+    TEST_MSG_PATH,
 )
 from dail_llm.data.tokenizer import CharTokenizer
-from dail_llm.model.transformer import DailTransformerLM
 from dail_llm.eval.metrics import (
-    calculate_perplexity,
-    calculate_bleu,
+    calculate_language_model_metrics,
     calculate_repetition_score,
 )
+from dail_llm.model.transformer import DailTransformerLM
 
+SEED = 42
 SEED_PROMPTS = [
     "The Minister for",
     "In this House",
@@ -39,7 +37,7 @@ GENERATE_TEMPERATURE = 0.8
 def load_model(ckpt_path: Path, device: torch.device):
     if not ckpt_path.exists():
         raise FileNotFoundError(f"Checkpoint not found: {ckpt_path}")
-    ckpt = torch.load(ckpt_path.as_posix(), map_location=device)
+    ckpt = torch.load(ckpt_path.as_posix(), map_location=device, weights_only=False)
     stoi = ckpt["vocab"]
     cfg = ckpt["config"]
 
@@ -60,7 +58,49 @@ def load_model(ckpt_path: Path, device: torch.device):
     return model, tokenizer, cfg
 
 
-def main():
+def _markdown_report(report: dict) -> str:
+    metrics = report["metrics"]
+    def render(value: float | None, spec: str) -> str:
+        return "N/A" if value is None else format(value, spec)
+
+    lines = [
+        "# Evaluation Results - Dáil LLM",
+        "",
+        f"**Checkpoint:** {report['checkpoint']['name']}",
+        "",
+        "## Held-out test metrics",
+        "",
+        "| Metric | Value |",
+        "|---|---:|",
+        f"| Cross-entropy | {render(metrics['cross_entropy'], '.4f')} |",
+        f"| Perplexity | {render(metrics['perplexity'], '.2f')} |",
+        f"| Bits per character | {render(metrics['bits_per_character'], '.4f')} |",
+        f"| Next-character accuracy | {render(metrics['next_character_accuracy'], '.2%')} |",
+        "",
+        "## Deterministic samples",
+        "",
+    ]
+    for index, sample in enumerate(report["samples"], 1):
+        repetition = sample["repeated_word_trigram_rate"]
+        repetition_label = "N/A" if repetition is None else f"{repetition:.4f}"
+        lines.extend([
+            f"### Sample {index}: \"{sample['prompt']}\"",
+            "",
+            f"*Repeated word-trigram rate: {repetition_label}*",
+            "",
+            "```text",
+            sample["text"].strip(),
+            "```",
+            "",
+        ])
+    return "\n".join(lines)
+
+
+def main() -> None:
+    torch.manual_seed(SEED)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(SEED)
+
     device = torch.device(DEVICE)
     ckpt_path = CKPT_DIR / "model_best.pt"
     if not ckpt_path.exists():
@@ -68,96 +108,77 @@ def main():
 
     print(f"Loading checkpoint: {ckpt_path}")
     model, tokenizer, cfg = load_model(ckpt_path, device)
-    block_size = cfg["block_size"]
 
-    # ------------------------------------------------------------------
-    # Load test set
-    # ------------------------------------------------------------------
     if not TEST_MSG_PATH.exists():
         raise FileNotFoundError(
             f"Test split not found at {TEST_MSG_PATH}. Run dataset_builder.py first."
         )
     test_text = TEST_MSG_PATH.read_text(encoding="utf-8", errors="replace")
     test_ids = tokenizer.encode(test_text)
-    print(f"Test set: {len(test_text):,} chars / {len(test_ids):,} tokens")
+    print(f"Test set: {len(test_ids):,} supported characters")
 
-    # ------------------------------------------------------------------
-    # Perplexity on test set
-    # ------------------------------------------------------------------
-    print("Calculating perplexity...")
-    ppl = calculate_perplexity(model, test_ids, block_size, device)
-    print(f"  Perplexity: {ppl:.2f}")
+    print("Calculating held-out metrics...")
+    metrics = calculate_language_model_metrics(
+        model,
+        test_ids,
+        cfg["block_size"],
+        device,
+    )
 
-    # ------------------------------------------------------------------
-    # Generate 5 samples
-    # ------------------------------------------------------------------
-    print("Generating samples...")
-    generated: list[str] = []
+    print("Generating deterministic samples...")
+    samples: list[dict] = []
     for prompt in SEED_PROMPTS:
-        valid_prompt = "".join(c for c in prompt if c in tokenizer.stoi)
+        valid_prompt, _ = tokenizer.filter_supported(prompt)
         if not valid_prompt:
             valid_prompt = " "
         idx = tokenizer.encode(valid_prompt).unsqueeze(0).to(device)
-        out = model.generate(idx, max_new_tokens=GENERATE_TOKENS, temperature=GENERATE_TEMPERATURE)[0]
-        generated.append(tokenizer.decode(out))
+        out = model.generate(
+            idx,
+            max_new_tokens=GENERATE_TOKENS,
+            temperature=GENERATE_TEMPERATURE,
+        )[0]
+        text = tokenizer.decode(out)
+        continuation = text[len(valid_prompt):]
+        samples.append({
+            "prompt": valid_prompt,
+            "text": text,
+            "continuation": continuation,
+            "repeated_word_trigram_rate": calculate_repetition_score(continuation),
+        })
 
-    # ------------------------------------------------------------------
-    # BLEU: compare generated samples against random test-set windows
-    # ------------------------------------------------------------------
-    refs: list[str] = []
-    window = GENERATE_TOKENS
-    for _ in SEED_PROMPTS:
-        max_start = max(0, len(test_text) - window)
-        start = random.randint(0, max_start)
-        refs.append(test_text[start: start + window])
+    manifest = None
+    if DATASET_MANIFEST_PATH.exists():
+        manifest = json.loads(DATASET_MANIFEST_PATH.read_text(encoding="utf-8"))
 
-    bleu = calculate_bleu(generated, refs)
-    print(f"  BLEU: {bleu:.4f}")
+    report = {
+        "schema_version": 1,
+        "generated_at": datetime.now(UTC).isoformat(),
+        "seed": SEED,
+        "checkpoint": {
+            "name": ckpt_path.name,
+            "parameters": sum(p.numel() for p in model.parameters()),
+            "config": cfg,
+        },
+        "test_characters": len(test_ids),
+        "metrics": metrics,
+        "generation": {
+            "new_characters": GENERATE_TOKENS,
+            "temperature": GENERATE_TEMPERATURE,
+        },
+        "samples": samples,
+        "dataset": manifest,
+    }
 
-    # ------------------------------------------------------------------
-    # Repetition scores
-    # ------------------------------------------------------------------
-    rep_scores = [calculate_repetition_score(g) for g in generated]
-    avg_rep = sum(rep_scores) / len(rep_scores)
-    print(f"  Avg repetition score: {avg_rep:.4f}")
+    EVAL_RESULTS_JSON_PATH.parent.mkdir(parents=True, exist_ok=True)
+    EVAL_RESULTS_JSON_PATH.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    EVAL_RESULTS_PATH.write_text(_markdown_report(report), encoding="utf-8")
 
-    # ------------------------------------------------------------------
-    # Build markdown report
-    # ------------------------------------------------------------------
-    lines: list[str] = [
-        "# Evaluation Results — Dáil LLM\n",
-        f"**Dataset:** Dáil Éireann Parliamentary Debates 1919-2013\n",
-        f"**Checkpoint:** {ckpt_path.name}\n",
-        "",
-        "## Scores\n",
-        "| Metric | Value |",
-        "|--------|-------|",
-        f"| Perplexity | {ppl:.2f} |",
-        f"| Corpus BLEU | {bleu:.4f} |",
-        f"| Avg Repetition Score | {avg_rep:.4f} |",
-        "",
-        "## Generated Samples\n",
-    ]
-
-    for i, (prompt, text, rep) in enumerate(zip(SEED_PROMPTS, generated, rep_scores), 1):
-        lines += [
-            f"### Sample {i} — prompt: *\"{prompt}\"*\n",
-            f"*Repetition score: {rep:.4f}*\n",
-            "```",
-            text.strip(),
-            "```",
-            "",
-        ]
-
-    report = "\n".join(lines)
-
-    EVAL_RESULTS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    EVAL_RESULTS_PATH.write_text(report, encoding="utf-8")
-
-    print("\n" + "=" * 60)
-    print(report)
-    print("=" * 60)
-    print(f"\nSaved to: {EVAL_RESULTS_PATH}")
+    print(json.dumps(metrics, indent=2))
+    print(f"Saved JSON report to: {EVAL_RESULTS_JSON_PATH}")
+    print(f"Saved Markdown report to: {EVAL_RESULTS_PATH}")
 
 
 if __name__ == "__main__":

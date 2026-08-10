@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-02T00:08:28.485383+00:00",
+  "seed": 42,
+  "checkpoint": {
+    "name": "model_best.pt",
+    "parameters": 3271168,
+    "config": {
+      "block_size": 256,
+      "embed_dim": 256,
+      "n_layers": 4,
+      "n_heads": 8,
+      "dropout": 0.1
+    }
+  },
+  "test_characters": 314780,
+  "metrics": {
+    "cross_entropy": 1.4030393378534776,
+    "perplexity": 4.067543838703541,
+    "bits_per_character": 2.024157894893347,
+    "next_character_accuracy": 0.5867162072823434
+  },
+  "generation": {
+    "new_characters": 200,
+    "temperature": 0.8
+  },
+  "samples": [
+    {
+      "prompt": "The Minister for",
+      "text": "The Minister for the lay pig. There arrangements who are in principles. I should like to this House did not use of bad and he can sit would be likely to develop that, but who is not raise some similar, goodwill any s",
+      "continuation": " the lay pig. There arrangements who are in principles. I should like to this House did not use of bad and he can sit would be likely to develop that, but who is not raise some similar, goodwill any s",
+      "repeated_word_trigram_rate": 0.0
+    },
+    {
+      "prompt": "In this House",
+      "text": "In this House or the parties officer holiday, qualities of people of the Minister is already at the moment the promission, that is necessary. So far a line that the commission power is against the net pursue in th",
+      "continuation": " or the parties officer holiday, qualities of people of the Minister is already at the moment the promission, that is necessary. So far a line that the commission power is against the net pursue in th",
+      "repeated_word_trigram_rate": 0.0
+    },
+    {
+      "prompt": "The question before us",
+      "text": "The question before used the Dáil to call only be a decisions at the bagance that is impossible to civil servants abte the development of the cost of the words' that least was productly about the Dublin that the Bill the c",
+      "continuation": "ed the Dáil to call only be a decisions at the bagance that is impossible to civil servants abte the development of the cost of the words' that least was productly about the Dublin that the Bill the c",
+      "repeated_word_trigram_rate": 0.0
+    },
+    {
+      "prompt": "I wish to raise",
+      "text": "I wish to raise that agricultural wages throwners and I hope for it sub-section meet used for that matters are not being relieved, if we were to the complete when the State far a holiday of the land artificattion, o",
+      "continuation": " that agricultural wages throwners and I hope for it sub-section meet used for that matters are not being relieved, if we were to the complete when the State far a holiday of the land artificattion, o",
+      "repeated_word_trigram_rate": 0.0
+    },
+    {
+      "prompt": "On the matter of",
+      "text": "On the matter of this Bill commissioners. I will referred to find performed could have able to give the tribunal year and go in the concerned better the schedwer of a manufacturer. So that is pit at a largely whom a ",
+      "continuation": " this Bill commissioners. I will referred to find performed could have able to give the tribunal year and go in the concerned better the schedwer of a manufacturer. So that is pit at a largely whom a ",
+      "repeated_word_trigram_rate": 0.0
+    }
+  ],
+  "dataset": {
+    "schema_version": 1,
+    "dataset": {
+      "name": "Dáil Éireann Parliamentary Debates 1919-2013 (Harvard Dataverse)",
+      "citation": "Proksch, S.O. and Slapin, J.B. (2010). Database of Parliamentary Speeches in Ireland, 1919-2013. Harvard Dataverse.",
+      "doi": "https://doi.org/10.7910/DVN/6MZN76",
+      "full_date_range": "1919-2013"
+    },
+    "corpus": {
+      "minimum_year": 1950,
+      "selected_date_min": "1950-02-15",
+      "selected_date_max": "1950-04-25",
+      "rows_processed": 715582,
+      "accepted_speeches": 9080,
+      "source_file_bytes": 6334226,
+      "source_file_characters": 6316066,
+      "source_sha256": "764307fb9a555c2f635484652729011275d3c9cb0726f00947e959f5f41a017c",
+      "clean_bytes": 6316064,
+      "sha256": "9ec7243e0d1c75c602f5c320f4d75ed7ba569c3e41b2e426e5ae46df87a964a8",
+      "target_bytes": 6291456,
+      "minimum_speech_characters": 50,
+      "maximum_non_ascii_ratio": 0.4,
+      "clean_characters": 6295637
+    },
+    "processing": {
+      "chunk_characters": 1000,
+      "chunk_overlap": 150,
+      "chunk_count": 7960,
+      "validation_ratio": 0.05,
+      "test_ratio": 0.05,
+      "split_characters": {
+        "train": 5666073,
+        "validation": 314782,
+        "test": 314781
+      }
+    }
+  }
+}

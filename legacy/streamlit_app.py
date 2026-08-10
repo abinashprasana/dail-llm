@@ -2,7 +2,7 @@
 Dáil LLM — Irish Parliamentary Transformer — Streamlit Dashboard
 
 Run from the project root:
-    streamlit run dail_llm/app/streamlit_app.py
+    streamlit run legacy/streamlit_app.py
 """
 import re
 import sys
@@ -18,7 +18,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import streamlit as st
 
-from config import (
+from dail_llm.config import (
     PLOTS_DIR, EVAL_RESULTS_PATH,
     N_LAYERS, N_HEADS, EMBED_DIM, BLOCK_SIZE, DATASET_NAME,
 )

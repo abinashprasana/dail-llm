@@ -1,10 +1,2 @@
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch
-numpy
-scikit-learn
-matplotlib
-tqdm
-streamlit
-ftfy
-nltk
-seaborn
+-e .

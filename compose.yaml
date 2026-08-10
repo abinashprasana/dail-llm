@@ -1,0 +1,12 @@
+services:
+  dail-llm:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DAIL_DEVICE: cpu
+      DAIL_MAX_CONCURRENT: 1
+      DAIL_MAX_QUEUED: 2
+      DAIL_RATE_LIMIT_REQUESTS: 5
+      DAIL_RATE_LIMIT_WINDOW: 60
+    restart: unless-stopped

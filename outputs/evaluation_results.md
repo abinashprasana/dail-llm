@@ -1,56 +1,54 @@
-# Evaluation Results — Dáil LLM
-
-**Dataset:** Dáil Éireann Parliamentary Debates 1919-2013
+# Evaluation Results - Dáil LLM
 
 **Checkpoint:** model_best.pt
 
-
-## Scores
+## Held-out test metrics
 
 | Metric | Value |
-|--------|-------|
+|---|---:|
+| Cross-entropy | 1.4030 |
 | Perplexity | 4.07 |
-| Corpus BLEU | 0.0104 |
-| Avg Repetition Score | 0.0000 |
+| Bits per character | 2.0242 |
+| Next-character accuracy | 58.67% |
 
-## Generated Samples
+## Deterministic samples
 
-### Sample 1 — prompt: *"The Minister for"*
+### Sample 1: "The Minister for"
 
-*Repetition score: 0.0000*
+*Repeated word-trigram rate: 0.0000*
 
-```
-The Minister for Finance whether he is aware should be not agreements. I have not fraid the country that the necessity has been seend to pay the Deputy. That is not in the next of the committee of the workers. The Mi
-```
-
-### Sample 2 — prompt: *"In this House"*
-
-*Repetition score: 0.0000*
-
-```
-In this House would avail of midle advise the could private of the banks that had normal in the reasonable of by the Government are compulsorilising the pools now to make the proposals of the regarding during the
+```text
+The Minister for the lay pig. There arrangements who are in principles. I should like to this House did not use of bad and he can sit would be likely to develop that, but who is not raise some similar, goodwill any s
 ```
 
-### Sample 3 — prompt: *"The question before us"*
+### Sample 2: "In this House"
 
-*Repetition score: 0.0000*
+*Repeated word-trigram rate: 0.0000*
 
-```
-The question before us to do that powers to receive the milk of simple and the point of view he is the problem of it shapping this producer for a productive (either to conluct that price? Then. There is not the Minister fo
-```
-
-### Sample 4 — prompt: *"I wish to raise"*
-
-*Repetition score: 0.0000*
-
-```
-I wish to raise that it would, are work so to cappital a matter with the speed that us doone that they would have been an urgoning to do mine in borrow that is concesssion the matter as that it was not a making in a
+```text
+In this House or the parties officer holiday, qualities of people of the Minister is already at the moment the promission, that is necessary. So far a line that the commission power is against the net pursue in th
 ```
 
-### Sample 5 — prompt: *"On the matter of"*
+### Sample 3: "The question before us"
 
-*Repetition score: 0.0000*
+*Repeated word-trigram rate: 0.0000*
 
+```text
+The question before used the Dáil to call only be a decisions at the bagance that is impossible to civil servants abte the development of the cost of the words' that least was productly about the Dublin that the Bill the c
 ```
-On the matter of the third total of Industry and Commerce. There is no enough agreement what are possibly but to operate would be donel this schedule to because the price of the possibilities, there are in told it is
+
+### Sample 4: "I wish to raise"
+
+*Repeated word-trigram rate: 0.0000*
+
+```text
+I wish to raise that agricultural wages throwners and I hope for it sub-section meet used for that matters are not being relieved, if we were to the complete when the State far a holiday of the land artificattion, o
+```
+
+### Sample 5: "On the matter of"
+
+*Repeated word-trigram rate: 0.0000*
+
+```text
+On the matter of this Bill commissioners. I will referred to find performed could have able to give the tribunal year and go in the concerned better the schedwer of a manufacturer. So that is pit at a largely whom a
 ```

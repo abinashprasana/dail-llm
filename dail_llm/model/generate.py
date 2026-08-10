@@ -5,9 +5,10 @@ CLI: generate text from a trained checkpoint.
 """
 import argparse
 from pathlib import Path
+
 import torch
 
-from config import CKPT_PATH, DEVICE
+from dail_llm.config import CKPT_PATH, DEVICE
 from dail_llm.data.tokenizer import CharTokenizer
 from dail_llm.model.transformer import DailTransformerLM
 

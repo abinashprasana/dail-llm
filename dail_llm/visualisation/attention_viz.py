@@ -5,11 +5,11 @@ Attention weight visualisation using seaborn heatmaps.
     visualise_attention(model, tokenizer, "The Minister for Finance", layer=0, head=0)
 """
 from __future__ import annotations
-from pathlib import Path
-from typing import Optional
 
-import torch
+from pathlib import Path
+
 import matplotlib.pyplot as plt
+import torch
 
 try:
     import seaborn as sns
@@ -23,7 +23,7 @@ def visualise_attention(
     prompt: str,
     layer: int = 0,
     head: int = 0,
-    save_path: Optional[Path | str] = None,
+    save_path: Path | str | None = None,
 ) -> None:
     """
     Plot the attention weight matrix for one layer and one head.
@@ -85,7 +85,7 @@ def visualise_all_heads(
     tokenizer,
     prompt: str,
     layer: int = 0,
-    save_path: Optional[Path | str] = None,
+    save_path: Path | str | None = None,
 ) -> None:
     """
     Plot all attention heads for one layer in a single grid figure.

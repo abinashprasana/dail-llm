@@ -3,5 +3,14 @@ __pycache__/
 *.pyc
 /data/
 dataverse_files/
-legacy/
 .DS_Store
+frontend/node_modules/
+frontend/dist/
+frontend/*.tsbuildinfo
+frontend/playwright-report/
+frontend/test-results/
+.pytest_cache/
+.ruff_cache/
+.env
+*.log
+.claude/

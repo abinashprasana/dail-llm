@@ -5,8 +5,8 @@ The CharTokenizer lives in dail_llm/data/tokenizer.py.
 This module re-exports it for convenience.
 """
 from __future__ import annotations
+
 import math
-from typing import Optional
 
 import torch
 import torch.nn as nn
@@ -128,7 +128,7 @@ class DailTransformerLM(nn.Module):
     def forward(
         self,
         idx: torch.Tensor,
-        targets: Optional[torch.Tensor] = None,
+        targets: torch.Tensor | None = None,
         return_attention_weights: bool = False,
     ):
         B, T = idx.shape
