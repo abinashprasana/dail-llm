@@ -24,10 +24,10 @@ test.beforeEach(async ({ page }) => {
       return route.fulfill({ json: { status: "ready", version: "0.2.0", model_loaded: true, device: "cpu" } });
     }
     if (url.endsWith("/evaluation")) {
-      return route.fulfill({ json: { checkpoint: { name: "model_best.pt" }, metrics: { cross_entropy: 1.4, perplexity: 4.07, bits_per_character: 2.02, next_character_accuracy: 0.55 }, samples: [{ prompt: "The Minister for", text: "The Minister for Finance", continuation: " Finance", repeated_word_trigram_rate: null }] } });
+      return route.fulfill({ json: { checkpoint: { name: "model_best.pt" }, metrics: { cross_entropy: 1.4, perplexity: 4.07, bits_per_character: 2.02, next_character_accuracy: 0.55 }, samples: [{ text: "The Minister for the lay pig. There arrangements who are in principles." }] } });
     }
     if (url.endsWith("/model")) {
-      return route.fulfill({ json: { name: "Dáil LLM", checkpoint: { name: "model_best.pt", sha256: "abc" }, architecture: { block_size: 256, embed_dim: 256, n_layers: 4, n_heads: 8, dropout: 0.1, vocab_size: 80, parameters: 3271168, type: "character model" }, dataset: null } });
+      return route.fulfill({ json: { name: "Dáil LLM", checkpoint: { name: "model_best.pt", sha256: "abc" }, architecture: { block_size: 256, embed_dim: 256, n_layers: 4, n_heads: 8, dropout: 0.1, parameters: 3271168 } } });
     }
     return route.continue();
   });
@@ -181,6 +181,8 @@ test("trace stages and replay work from the keyboard without focusing the canvas
   await replay.focus();
   await page.keyboard.press("Enter");
   await expect(shell).toHaveAttribute("data-trace-running", "true");
+  // Add brief delay for state propagation
+  await page.waitForTimeout(50);
   await expectTraceStage(page, "speaker", { timeout: 1_000 });
   await expectTraceStage(page, "attention", { timeout: 1_250 });
   await expectTraceStage(page, "prediction", { timeout: 1_600 });
