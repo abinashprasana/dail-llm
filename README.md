@@ -4,9 +4,9 @@
 
 **A character-level language model trained from scratch on nearly a century of Irish parliamentary debate.**
 
-[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-From%20Scratch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org)
-[![Streamlit](https://img.shields.io/badge/Dashboard-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://abinashprasana-dail-llm-dail-llmappstreamlit-app-um65t7.streamlit.app/)
+[![Deployment](https://img.shields.io/badge/Deployment-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://dail-llm.vercel.app/)
 [![Perplexity](https://img.shields.io/badge/Perplexity-4.07-2ea44f?style=for-the-badge)](.)
 [![Status](https://img.shields.io/badge/Status-Completed-2ea44f?style=for-the-badge)](.)
 
@@ -24,15 +24,15 @@ I built this project to understand how transformers actually work, not just in t
 
 The model learns to generate text that looks like parliamentary debate, one character at a time, with no pretrained weights and no external APIs. Everything runs locally on CPU.
 
-The project also includes a four tab Streamlit dashboard where you can type a prompt and watch the model generate text, explore how attention weights flow across characters as a heatmap, and review the full evaluation results and training curves.
+The model is presented through a React and TypeScript interface backed by FastAPI. You can generate text from a prompt, inspect causal attention across characters, and review verified evaluation evidence from the active checkpoint.
 
 ---
 
 ## 🎬 Live Demo
 
-[![Open Live App](https://img.shields.io/badge/Open%20Live%20App%20%F0%9F%9A%80-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://abinashprasana-dail-llm-dail-llmappstreamlit-app-um65t7.streamlit.app/)
+[![Open Live App](https://img.shields.io/badge/Open%20Live%20App-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://dail-llm.vercel.app/)
 
-The app is deployed and running on Streamlit Cloud. No setup needed. You can generate parliamentary text from a seed prompt, visualise attention weights as a heatmap across all 4 layers and 8 heads, and browse the full evaluation results and training curves.
+The production application is deployed on Vercel and served from one public origin. No setup is required: open the model lab to generate parliamentary text, review held-out evaluation metrics, or inspect causal attention across all four layers and eight heads.
 
 ---
 
@@ -241,8 +241,12 @@ dail-llm/
 │   │   └── training_plots.py         loss and perplexity curve plots
 │   ├── 📂 rag/
 │   │   └── retriever.py              TF-IDF retrieval over SQLite document store
-│   └── 📂 app/
-│       └── streamlit_app.py          four tab Streamlit dashboard
+│   └── 📂 api/
+│       ├── app.py                    FastAPI application and React host
+│       └── service.py                model inference service
+│
+├── 📂 frontend/                      React and TypeScript interface
+├── 📂 legacy/                        archived pre-redesign application
 │
 └── 📂 outputs/
     ├── checkpoints/                  trained model weights
@@ -276,12 +280,13 @@ python train_pipeline.py
 
 This runs all four steps in order: extract, split, train, evaluate. If `dail_debates_clean.txt` already exists the extraction step is skipped automatically.
 
-**5. Launch the Streamlit dashboard**
+**5. Launch the production application**
 ```bash
-streamlit run dail_llm/app/streamlit_app.py
+docker build -t dail-llm .
+docker run --rm -p 8000:8000 -e PORT=8000 dail-llm
 ```
 
-Then open `http://localhost:8501` in your browser.
+Then open `http://localhost:8000` in your browser.
 
 <details>
 <summary>⚙️ Run individual steps</summary>
