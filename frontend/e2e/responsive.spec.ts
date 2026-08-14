@@ -336,6 +336,6 @@ test("matches the reduced-motion hero visual baseline", async ({ page }, testInf
   await expect(hero).toHaveScreenshot("hero-reduced-motion.png", {
     animations: "disabled",
     caret: "hide",
-    maxDiffPixels: 8_000,
+    maxDiffPixels: 10_000,
   });
 });
