@@ -4,7 +4,7 @@
 
 **A character-level language model trained from scratch on nearly a century of Irish parliamentary debate.**
 
-[![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-From%20Scratch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org)
 [![Deployment](https://img.shields.io/badge/Deployment-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://dail-llm.vercel.app/)
 [![Perplexity](https://img.shields.io/badge/Perplexity-4.07-2ea44f?style=for-the-badge)](.)
@@ -24,15 +24,15 @@ I built this project to understand how transformers actually work, not just in t
 
 The model learns to generate text that looks like parliamentary debate, one character at a time, with no pretrained weights and no external APIs. Everything runs locally on CPU.
 
-The model is presented through a React and TypeScript interface backed by FastAPI. You can generate text from a prompt, inspect causal attention across characters, and review verified evaluation evidence from the active checkpoint.
+The project also includes a React and TypeScript interface where you can type a prompt and watch the model generate text, explore how attention weights flow across characters as a heatmap, and review the full evaluation results and training curves.
 
 ---
 
 ## 🎬 Live Demo
 
-[![Open Live App](https://img.shields.io/badge/Open%20Live%20App-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://dail-llm.vercel.app/)
+[![Open Live App](https://img.shields.io/badge/Open%20Live%20App%20%F0%9F%9A%80-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://dail-llm.vercel.app/)
 
-The production application is deployed on Vercel and served from one public origin. No setup is required: open the model lab to generate parliamentary text, review held-out evaluation metrics, or inspect causal attention across all four layers and eight heads.
+The app is deployed and running on Vercel. No setup needed. You can generate parliamentary text from a seed prompt, visualise attention weights as a heatmap across all 4 layers and 8 heads, and browse the full evaluation results and training curves.
 
 ---
 
@@ -242,11 +242,7 @@ dail-llm/
 │   ├── 📂 rag/
 │   │   └── retriever.py              TF-IDF retrieval over SQLite document store
 │   └── 📂 api/
-│       ├── app.py                    FastAPI application and React host
-│       └── service.py                model inference service
-│
-├── 📂 frontend/                      React and TypeScript interface
-├── 📂 legacy/                        archived pre-redesign application
+│       └── app.py                    FastAPI application and React host
 │
 └── 📂 outputs/
     ├── checkpoints/                  trained model weights
