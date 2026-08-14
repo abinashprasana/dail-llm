@@ -178,13 +178,34 @@ test("trace stages and replay work from the keyboard without focusing the canvas
   await page.keyboard.press("Space");
   await expect(prediction).toHaveAttribute("aria-pressed", "true");
 
+  await page.evaluate(() => {
+    const shell = document.querySelector<HTMLElement>(".hero-scene-shell");
+    if (!shell) throw new Error("Trace shell is missing");
+    const stages: string[] = [];
+    const record = () => stages.push(shell.dataset.traceStage ?? "");
+    record();
+    const observer = new MutationObserver(record);
+    observer.observe(shell, { attributes: true, attributeFilter: ["data-trace-stage"] });
+    Object.assign(window, { __traceStages: stages, __traceObserver: observer });
+  });
+
   await replay.focus();
   await page.keyboard.press("Enter");
   await expect(shell).toHaveAttribute("data-trace-running", "true");
-  await expectTraceStage(page, "speaker", { timeout: 1_000 });
-  await expectTraceStage(page, "attention", { timeout: 1_250 });
-  await expectTraceStage(page, "prediction", { timeout: 1_600 });
-  await expect(shell).toHaveAttribute("data-trace-running", "false", { timeout: 1_200 });
+  await expect(shell).toHaveAttribute("data-trace-running", "false", { timeout: 3_000 });
+  const replayedStages = await page.evaluate(() => {
+    const traceWindow = window as typeof window & {
+      __traceStages?: string[];
+      __traceObserver?: MutationObserver;
+    };
+    traceWindow.__traceObserver?.disconnect();
+    return traceWindow.__traceStages ?? [];
+  });
+  const orderedStages = replayedStages.filter((stage, index) => stage !== replayedStages[index - 1]);
+  expect(orderedStages).toEqual(expect.arrayContaining(["idle", "speaker", "attention", "prediction"]));
+  expect(orderedStages.indexOf("speaker")).toBeLessThan(orderedStages.indexOf("attention"));
+  expect(orderedStages.indexOf("attention")).toBeLessThan(orderedStages.lastIndexOf("prediction"));
+  await expectTraceStage(page, "prediction");
   await expect(prediction).toHaveAttribute("aria-pressed", "true");
 
   if (await canvas.count()) {
@@ -295,7 +316,9 @@ test("matches the reduced-motion archive visual baseline", async ({ page }, test
   await expect(card).toHaveScreenshot("archive-reduced-motion.png", {
     animations: "disabled",
     caret: "hide",
-    maxDiffPixelRatio: 0.01,
+    // Windows and Linux rasterize the bundled editorial fonts differently.
+    // Layout changes still fail by dimension; this bounded allowance absorbs glyph edges.
+    maxDiffPixels: 8_000,
   });
 });
 
@@ -313,6 +336,6 @@ test("matches the reduced-motion hero visual baseline", async ({ page }, testInf
   await expect(hero).toHaveScreenshot("hero-reduced-motion.png", {
     animations: "disabled",
     caret: "hide",
-    maxDiffPixelRatio: 0.01,
+    maxDiffPixels: 8_000,
   });
 });
