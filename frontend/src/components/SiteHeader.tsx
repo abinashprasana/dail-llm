@@ -1,6 +1,7 @@
 import { Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Seal } from "./Seal";
 
 const links = [
   { label: "Model", href: "/#model" },
@@ -33,7 +34,7 @@ export function SiteHeader() {
       <header className="site-header">
         <div className="header-inner">
         <Link className="wordmark" to="/" aria-label="Dáil LLM home" onClick={() => setOpen(false)}>
-          <span className="wordmark-seal" aria-hidden="true"><i /><i /><i /></span>
+          <Seal size={30} />
           <span>Dáil LLM</span>
         </Link>
 

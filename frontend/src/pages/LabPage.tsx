@@ -157,7 +157,7 @@ function GenerationPanel() {
     <div className="lab-panel-grid">
       <form className="control-card" onSubmit={submit}>
         <div className="panel-kicker">Generation controls</div>
-        <h2>Continue a parliamentary prompt.</h2>
+        <h2>Continue a parliamentary prompt</h2>
         <p>The model predicts one character at a time from the preceding context.</p>
 
         <label className="field-label" htmlFor="seed-prompt">Seed prompt <span>{prompt.length}/256</span></label>
@@ -230,7 +230,7 @@ function EvaluationPanel({ report, error }: { report: EvaluationReport | null; e
   return (
     <div className="evaluation-panel">
       <div className="evaluation-intro">
-        <div><div className="panel-kicker">Held-out test record</div><h2>Evidence tied to this checkpoint.</h2></div>
+        <div><div className="panel-kicker">Held-out test record</div><h2>Evidence tied to this checkpoint</h2></div>
         <p>Each measure comes from the test split. Saved samples use a fixed seed and can be reproduced from the same weights.</p>
       </div>
       <div className="lab-metric-grid">
@@ -284,7 +284,7 @@ function AttentionPanel({ model }: { model: ModelMetadata | null }) {
   return (
     <div className="attention-panel">
       <div className="evaluation-intro">
-        <div><div className="panel-kicker">Causal attention</div><h2>See what each character reads.</h2></div>
+        <div><div className="panel-kicker">Causal attention</div><h2>See what each character reads</h2></div>
         <p>Rows are attending characters. Columns are earlier characters available inside the causal mask.</p>
       </div>
       <form className="attention-controls" onSubmit={submit}>

@@ -69,7 +69,7 @@ export function HomePage() {
               transition={reducedMotion ? { duration: 0.18 } : undefined}
             >
               <div className="eyebrow"><span /> Irish parliamentary language model</div>
-              <h1>Parliamentary debate, <em>modeled character by character.</em></h1>
+              <h1>Parliamentary debate, <em>modeled character by character</em></h1>
               <p className="hero-lede">
                 Dáil LLM is a {formatCompactNumber(architecture.parameters)}-parameter decoder-only transformer trained on
                 Dáil Éireann debates. It runs locally, without an external model API.
@@ -116,7 +116,7 @@ export function HomePage() {
           <div className="page-width split-heading">
             <div>
               <div className="eyebrow"><span /> Inside the model</div>
-              <h2>A compact transformer, shown stage by stage.</h2>
+              <h2>A compact transformer, shown stage by stage</h2>
             </div>
             <p>
               Every prediction passes through the same four-stage path. The model reads at most 256 characters,
@@ -149,7 +149,7 @@ export function HomePage() {
             </motion.div>
             <div className="data-copy">
               <div className="eyebrow"><span /> The source material</div>
-              <h2>Parliamentary language carries its own rhythm.</h2>
+              <h2>Parliamentary language carries its own rhythm</h2>
               <p>
                 The current checkpoint uses a {corpusSize} filtered extraction from debates dated {dateRange}.
                 Speeches under 50 characters and speeches above a 40% non-ASCII threshold were excluded.
@@ -170,7 +170,7 @@ export function HomePage() {
             <div className="split-heading evidence-heading">
               <div>
                 <div className="eyebrow"><span /> Held-out evidence</div>
-                <h2>Measured on held-out parliamentary text.</h2>
+                <h2>Measured on held-out parliamentary text</h2>
               </div>
               <p>
                 Perplexity and next-character accuracy describe the model directly. Each saved sample is generated with a fixed seed so results can be reproduced.
@@ -199,7 +199,7 @@ export function HomePage() {
           <div className="page-width lab-invitation-inner">
             <div>
               <div className="eyebrow light"><span /> Model lab</div>
-              <h2>Inspect the model while it works.</h2>
+              <h2>Inspect the model while it works</h2>
             </div>
             <div className="lab-features">
               <div><Cpu size={19} /><span>Generate locally</span></div>
