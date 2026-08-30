@@ -40,7 +40,7 @@ describe("Dáil LLM application", () => {
     const attention = screen.getByRole("tab", { name: "Attention" });
     fireEvent.click(attention);
     expect(attention).toHaveAttribute("aria-selected", "true");
-    expect(await screen.findByRole("heading", { name: "See what each character reads." })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "See what each character reads" })).toBeInTheDocument();
   });
 
   it("validates an empty generation prompt", async () => {
