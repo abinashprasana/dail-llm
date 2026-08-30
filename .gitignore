@@ -14,3 +14,4 @@ frontend/test-results/
 .env
 *.log
 .claude/
+*.egg-info/
