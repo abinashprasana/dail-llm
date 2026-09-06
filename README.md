@@ -22,9 +22,9 @@
 
 I built this project to understand how transformers actually work, not just in theory but from the ground up. Instead of using a pretrained model or someone else's tokenizer, I wrote everything from scratch in PyTorch and trained it on real speeches from the Dáil Éireann, the lower house of the Irish parliament. The Dáil has been sitting since January 1919, and the source dataset records every speech made by every elected TD across nearly a century of Irish legislative history.
 
-The model learns to generate text that looks like parliamentary debate, one character at a time, with no pretrained weights and no external APIs. Everything runs locally on CPU.
+The model learns to generate text that looks like parliamentary debate, one character at a time. No pretrained weights, no external APIs, nothing running in the cloud. Everything happens on a CPU on my own machine.
 
-The project also includes a React and TypeScript interface where you can type a prompt and watch the model generate text, explore how attention weights flow across characters as a heatmap, and review the full evaluation results and training curves.
+There's a front end too — React and TypeScript, sitting on top of the FastAPI service — so you don't have to read JSON to see what the model does.
 
 ---
 
@@ -32,7 +32,7 @@ The project also includes a React and TypeScript interface where you can type a 
 
 [![Open Live App](https://img.shields.io/badge/Open%20Live%20App%20%F0%9F%9A%80-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://dail-llm.vercel.app/)
 
-The app is deployed and running on Vercel. No setup needed. You can generate parliamentary text from a seed prompt, visualise attention weights as a heatmap across all 4 layers and 8 heads, and browse the full evaluation results and training curves.
+It's live on Vercel, no setup required. Type a prompt and the model continues it. Pick a layer and a head and you'll see the attention heatmap for that exact generation — all 4 layers, 8 heads each are available. The evaluation page underneath has the training curves and the numbers below, straight from the last run.
 
 ---
 
@@ -236,7 +236,7 @@ a manufacturer. So that is pit at a largely whom a
 
 <br/>
 
-> The outputs are not grammatically correct English and that is completely expected. What the model actually learned is parliamentary register. Words like Minister, Deputy, House, Dáil, Bill and commissioners appear in roughly the right positions. Punctuation is placed with approximate correctness. The character sequences feel plausible rather than random noise, which is honestly quite impressive for 3.27 million parameters trained on 6 MB of text.
+> None of this is grammatical English, and it was never going to be — a character-level model this small doesn't know what a word is. What it did pick up is the register: Minister, Deputy, House, Dáil, Bill, commissioners, all landing roughly where a real speech would put them, with punctuation that's usually in the right place. For 3.27 million parameters trained on 6 MB of text, that's more than I expected going in.
 
 ---
 
@@ -448,11 +448,11 @@ Copy [`.env.example`](.env.example) as a starting point.
 
 ## ⚠️ Limitations
 
-This is a small educational project, not a production language model. A few things worth knowing before drawing conclusions from the outputs.
+This is a small educational project, not a production language model. Keep that in mind before reading too much into the outputs.
 
-The model operates on individual characters rather than words. It has no concept of what a word is, which makes grammatical coherence difficult to achieve. The context window of 256 characters covers roughly 40 to 50 words, so the model forgets the beginning of a long sentence before it finishes it. Training used 6 MB of text drawn from a single stretch of 1950, which is both small and narrow by modern standards, and at 3.27 million parameters the model has a fraction of the capacity of even the smallest publicly available language models.
+The model has no concept of a word — it operates on individual characters, so grammatical coherence was never really on the table. Its context window is 256 characters, which is only about 40 to 50 words, so it's forgotten the start of a sentence before it reaches the end. And the training data itself is thin: 6 MB of text from a few weeks in 1950, run through 3.27 million parameters, which is a fraction of what even the smallest public language models carry.
 
-Despite these constraints, the model learned something real. It produces parliamentary vocabulary in roughly appropriate positions, uses punctuation with approximate correctness, and generates novel sequences without looping.
+Given all that, it still learned something real: parliamentary vocabulary in roughly the right spots, punctuation that mostly lands, and generation that never loops.
 
 <div align="center">
 
