@@ -37,7 +37,7 @@ VAL_RATIO = 0.05
 TEST_RATIO = 0.05
 DATASET_NAME = "Dáil Éireann Parliamentary Debates 1919-2013 (Harvard Dataverse)"
 DATASET_CITATION = (
-    "Proksch, S.O. and Slapin, J.B. (2010). Database of Parliamentary "
+    "Herzog, A. and Mikhaylov, S.J. (2017). Database of Parliamentary "
     "Speeches in Ireland, 1919-2013. Harvard Dataverse."
 )
 DATASET_DOI = "https://doi.org/10.7910/DVN/6MZN76"
