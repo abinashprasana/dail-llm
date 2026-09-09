@@ -7,6 +7,7 @@ COPY frontend/ ./
 RUN pnpm run build
 
 FROM python:3.12-slim AS runtime
+ARG INSTALL_RESEARCH=false
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1 \
@@ -22,9 +23,12 @@ COPY pyproject.toml README.md config.py ./
 COPY dail_llm/ ./dail_llm/
 RUN python -m pip install --upgrade pip && \
     python -m pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.6,<3" && \
-    python -m pip install .
+    python -m pip install . && \
+    if [ "$INSTALL_RESEARCH" = "true" ]; then python -m pip install '.[research]'; fi
 
-COPY outputs/ ./outputs/
+COPY outputs/checkpoints/model_best.pt ./outputs/checkpoints/model_best.pt
+COPY outputs/dataset_manifest.json outputs/evaluation_results.json ./outputs/
+COPY outputs/plots/ ./outputs/plots/
 COPY --from=frontend-builder /build/frontend/dist ./frontend/dist/
 RUN chown -R dail:dail /app
 USER dail

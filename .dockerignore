@@ -15,6 +15,7 @@ frontend/test-results
 outputs/checkpoints/*
 !outputs/checkpoints/model_best.pt
 outputs/readme-data.md
+outputs/research
 outputs/evaluation_results.md
 *.log
 .env

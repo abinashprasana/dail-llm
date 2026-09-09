@@ -15,3 +15,4 @@ frontend/test-results/
 *.log
 .claude/
 *.egg-info/
+/outputs/research/
