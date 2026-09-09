@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🏛️ Dáil LLM — Irish Parliamentary Transformer
+# 🏛️ Dáil LLM: Irish Parliamentary Transformer
 
 **A character-level language model trained from scratch on Irish parliamentary debate.**
 
@@ -33,7 +33,7 @@ I built this project to understand how transformers actually work, not just in t
 
 The model learns to generate text that looks like parliamentary debate, one character at a time. No pretrained weights, no external APIs, nothing running in the cloud. Everything happens on a CPU on my own machine.
 
-There's a front end too — React and TypeScript, sitting on top of the FastAPI service — so you don't have to read JSON to see what the model does.
+There's a front end too, React and TypeScript, sitting on top of the FastAPI service, so you don't have to read JSON to see what the model does.
 
 ---
 
@@ -41,9 +41,9 @@ There's a front end too — React and TypeScript, sitting on top of the FastAPI 
 
 [![Open Live App](https://img.shields.io/badge/Open%20Live%20App%20%F0%9F%9A%80-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://dail-llm.vercel.app/)
 
-It's live on Vercel, no setup required. Type a prompt and the model continues it. Pick a layer and a head and you'll see the attention heatmap for that exact generation — all 4 layers, 8 heads each are available. The evaluation page underneath has the training curves and the numbers below, straight from the last run.
+It's live on Vercel, no setup required. Type a prompt and the model continues it. Pick a layer and a head and you'll see the attention heatmap for that exact generation (all 4 layers, 8 heads each are available). The evaluation page underneath has the training curves and the numbers below, straight from the last run.
 
-There's also a [Research page](https://dail-llm.vercel.app/research), separate from the served checkpoint. It walks through the completed CPU pilot — speech memory, historical comparisons, methods — using recorded examples that are checked into the repo, so none of it depends on a live research backend being up.
+There's also a [Research page](https://dail-llm.vercel.app/research), separate from the served checkpoint. It walks through the completed CPU pilot (speech memory, historical comparisons, methods) using recorded examples that are checked into the repo, so none of it depends on a live research backend being up.
 
 ---
 
@@ -183,7 +183,7 @@ Measured on the held-out test split (314,780 characters) with `model_best.pt`.
 </div>
 
 > An earlier version of this project reported a corpus BLEU score of 0.0104. The current evaluation
-> runner does not compute BLEU — word-level n-gram overlap is close to meaningless for a
+> runner does not compute BLEU. Word-level n-gram overlap is close to meaningless for a
 > character-level model generating novel sequences, so it was replaced by bits per character and
 > next-character accuracy. `calculate_bleu` is still available in
 > [`metrics.py`](dail_llm/eval/metrics.py) for anyone who wants it (it requires `nltk`).
@@ -247,7 +247,7 @@ a manufacturer. So that is pit at a largely whom a
 
 <br/>
 
-> None of this is grammatical English, and it was never going to be — a character-level model this small doesn't know what a word is. What it did pick up is the register: Minister, Deputy, House, Dáil, Bill, commissioners, all landing roughly where a real speech would put them, with punctuation that's usually in the right place. For 3.27 million parameters trained on 6 MB of text, that's more than I expected going in.
+> None of this is grammatical English, and it was never going to be: a character-level model this small doesn't know what a word is. What it did pick up is the register. Minister, Deputy, House, Dáil, Bill, commissioners, all landing roughly where a real speech would put them, with punctuation that's usually in the right place. For 3.27 million parameters trained on 6 MB of text, that's more than I expected going in.
 
 ---
 
@@ -290,7 +290,7 @@ dail-llm/
 │   │   ├── runtime.py                concurrency limits, queueing and rate limiting
 │   │   ├── schemas.py                request and response models
 │   │   └── __main__.py               `python -m dail_llm.api` entry point
-│   └── 📂 research/                  offline, reproducible experiments — separate from the served app
+│   └── 📂 research/                  offline, reproducible experiments, separate from the served app
 │       ├── data.py                   streams the archive format, selects whole debate groups
 │       ├── modeling.py               versioned tokenizer, speech-local windows, conditioning
 │       ├── training.py               seeded CPU training with exact same-environment resume
@@ -338,7 +338,7 @@ dail-llm/
 
 Not tracked in git: `dataverse_files/` (the raw dataset), `data/` (generated splits and the SQLite
 store), `outputs/research/` (research run directories), `frontend/node_modules/` and `frontend/dist/`.
-`frontend/public/research-data/pilot/` is the exception — those recorded examples are checked in on
+`frontend/public/research-data/pilot/` is the exception. Those recorded examples are checked in on
 purpose so the Research page works without a live backend.
 
 ---
@@ -359,11 +359,11 @@ Python 3.12 or newer is required.
 pip install -e ".[research]"
 ```
 
-`pip install -r requirements.txt` installs only the serving dependencies — torch, FastAPI and
+`pip install -r requirements.txt` installs only the serving dependencies: torch, FastAPI and
 uvicorn. The `research` extra adds `ftfy`, `numpy`, `scikit-learn`, `tqdm` and `matplotlib`, which
 the extraction, RAG and plotting steps need, and it's also what the offline research CLI needs to
-run at all. Use `.[dev]` for the test and lint tooling, or `.[dev,research]` for the full suite —
-that's what CI installs.
+run at all. Use `.[dev]` for the test and lint tooling, or `.[dev,research]` for the full suite,
+which is what CI installs.
 
 **3. Download the dataset**
 
@@ -392,8 +392,8 @@ docker run --rm -p 8000:8000 -e PORT=8000 dail-llm
 ```
 
 Then open `http://localhost:8000` in your browser. The Research page's recorded examples work out
-of the box — they're already in the built frontend. To also enable live inspection against a real
-research run, build with the research dependencies and mount a private runtime bundle:
+of the box, since they're already in the built frontend. To also enable live inspection against a
+real research run, build with the research dependencies and mount a private runtime bundle:
 
 ```bash
 docker build --build-arg INSTALL_RESEARCH=true -t dail-llm:research .
@@ -402,14 +402,14 @@ docker run --rm -p 8000:8000 \
   -e DAIL_RESEARCH_RUN=/research-private dail-llm:research
 ```
 
-That private bundle comes from `python -m dail_llm.research.publication --private-bundle` — see
+That private bundle comes from `python -m dail_llm.research.publication --private-bundle`. See
 [the interface guide](docs/research-ui.md) for the full export and deployment steps. Without it,
 `docker build` (no build arg) still runs everything else exactly as before.
 
 <details>
 <summary>🖥️ Run locally without Docker</summary>
 
-Build the frontend once, then start the API — it serves the compiled bundle from `frontend/dist`:
+Build the frontend once, then start the API, which serves the compiled bundle from `frontend/dist`:
 
 ```bash
 cd frontend
@@ -452,8 +452,8 @@ ruff check dail_llm tests
 pytest -m "not integration"
 ```
 
-The research extra is required here too — several tests import `dail_llm.research`, which depends
-on `numpy` and `scikit-learn`. Drop the marker filter to include the tests that load the trained
+The research extra is required here too, since several tests import `dail_llm.research`, which
+depends on `numpy` and `scikit-learn`. Drop the marker filter to include the tests that load the trained
 checkpoint. The suite also runs a synthetic end-to-end research study, so it never needs the real
 archive. Frontend checks:
 
@@ -489,10 +489,10 @@ The FastAPI app serves the React bundle at `/` and exposes these endpoints.
 
 Generation is serialised behind a concurrency limiter with a bounded queue and a per-client rate
 limit, so a single CPU container stays responsive. `/api/v1/research/inspect` shares that same gate
-and rate limit, and only works at all when `DAIL_RESEARCH_RUN` points at a valid private bundle —
-otherwise it returns 503 and the Research page falls back to its recorded examples. The rate limiter
+and rate limit, and only works at all when `DAIL_RESEARCH_RUN` points at a valid private bundle.
+Otherwise it returns 503 and the Research page falls back to its recorded examples. The rate limiter
 keys off the address the ASGI server resolves for the connection, not a client-supplied
-`X-Forwarded-For` header; put a reverse proxy's trusted-proxy configuration in front of it rather
+`X-Forwarded-For` header. Put a reverse proxy's trusted-proxy configuration in front of it rather
 than trusting forwarded headers directly.
 
 ### Environment variables
