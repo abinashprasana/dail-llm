@@ -1,4 +1,5 @@
 """FastAPI application and single-origin frontend host."""
+
 from __future__ import annotations
 
 import json
@@ -23,6 +24,7 @@ from dail_llm.api.schemas import (
     GenerateRequest,
     GenerateResponse,
     HealthResponse,
+    ResearchInspectRequest,
 )
 from dail_llm.api.service import ModelService, PromptValidationError
 from dail_llm.config import (
@@ -59,17 +61,28 @@ logger.propagate = False
 
 
 def _client_key(request: Request) -> str:
-    forwarded = request.headers.get("x-forwarded-for")
-    if forwarded:
-        return forwarded.split(",", 1)[0].strip()
+    # The ASGI server resolves headers only from its configured trusted proxies.
+    # Reading a raw forwarded header here lets a client rotate rate-limit keys.
     return request.client.host if request.client else "unknown"
 
 
 def create_app(load_model_on_start: bool = True) -> FastAPI:
+    frontend_dist = Path(
+        os.getenv("DAIL_FRONTEND_DIST", str(PROJECT_ROOT / "frontend" / "dist"))
+    ).resolve()
+    public_research = Path(
+        os.getenv("DAIL_RESEARCH_PUBLIC", str(frontend_dist / "research-data" / "pilot"))
+    )
+
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         app.state.model_service = None
         app.state.model_error = None
+        app.state.research_reader = None
+        app.state.research_release = None
+        app.state.research_reason = (
+            "Recorded examples are available. Live inspection is not enabled."
+        )
         if load_model_on_start:
             try:
                 app.state.model_service = await anyio.to_thread.run_sync(ModelService)
@@ -77,6 +90,24 @@ def create_app(load_model_on_start: bool = True) -> FastAPI:
             except Exception as exc:  # Keep health endpoint available on failure.
                 app.state.model_error = str(exc)
                 logger.exception("model_load_failed")
+        try:
+            summary = json.loads((public_research / "summary.json").read_text(encoding="utf-8"))
+            app.state.research_release = summary["release_id"]
+            if os.getenv("DAIL_RESEARCH_RUN"):
+                from dail_llm.research.publication import ResearchReader
+
+                reader = await anyio.to_thread.run_sync(
+                    ResearchReader, Path(os.environ["DAIL_RESEARCH_RUN"]), summary["seed"]
+                )
+                if reader.release_id != summary["release_id"]:
+                    raise ValueError("Public and private research releases differ")
+                app.state.research_reader = reader
+                app.state.research_reason = (
+                    "Live inspection uses the published research checkpoint."
+                )
+        except Exception:
+            app.state.research_reason = "Live research artifacts are unavailable or incompatible."
+            logger.warning("research_unavailable")
         yield
 
     app = FastAPI(
@@ -214,9 +245,45 @@ def create_app(load_model_on_start: bool = True) -> FastAPI:
         except PromptValidationError as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
 
-    frontend_dist = Path(
-        os.getenv("DAIL_FRONTEND_DIST", str(PROJECT_ROOT / "frontend" / "dist"))
-    )
+    @app.get("/api/v1/research/capabilities")
+    async def research_capabilities(request: Request):
+        return {
+            "release_id": getattr(request.app.state, "research_release", None),
+            "live": getattr(request.app.state, "research_reader", None) is not None,
+            "reason": getattr(
+                request.app.state, "research_reason", "Live inspection is unavailable."
+            ),
+            "policies": ["uniform", "speech_balanced", "context_diverse"],
+        }
+
+    @app.post("/api/v1/research/inspect")
+    async def research_inspect(payload: ResearchInspectRequest, request: Request):
+        await enforce_rate_limit(request)
+        reader = getattr(request.app.state, "research_reader", None)
+        if reader is None:
+            raise HTTPException(
+                503, "Live inspection is unavailable. Recorded examples still work."
+            )
+        if payload.release_id != reader.release_id:
+            raise HTTPException(409, "The research release changed. Reload the page.")
+        try:
+            async with request.app.state.gate.slot():
+                return await anyio.to_thread.run_sync(
+                    reader.inspect, payload.prefix, payload.policy, payload.excluded_speech
+                )
+        except BusyError as exc:
+            raise HTTPException(429, str(exc), headers={"Retry-After": "3"}) from exc
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+
+    @app.get("/research", include_in_schema=False)
+    @app.get("/research/", include_in_schema=False)
+    async def research_page():
+        index = frontend_dist / "index.html"
+        if not index.exists():
+            raise HTTPException(404, "Frontend has not been built.")
+        return FileResponse(index)
+
     if PLOTS_DIR.exists():
         app.mount("/research", StaticFiles(directory=PLOTS_DIR), name="research")
     if (frontend_dist / "assets").exists():

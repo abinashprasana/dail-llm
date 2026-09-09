@@ -1,5 +1,8 @@
 """Versioned request and response contracts."""
+
 from __future__ import annotations
+
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -39,3 +42,10 @@ class HealthResponse(BaseModel):
     model_loaded: bool
     device: str
     error: str | None = None
+
+
+class ResearchInspectRequest(BaseModel):
+    release_id: str = Field(min_length=1, max_length=80)
+    prefix: str = Field(min_length=1, max_length=256)
+    policy: Literal["uniform", "speech_balanced", "context_diverse"] = "uniform"
+    excluded_speech: str | None = Field(default=None, min_length=1, max_length=80)
