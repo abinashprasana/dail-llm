@@ -31,6 +31,7 @@ from dail_llm.config import (
 )
 from dail_llm.data.tokenizer import CharTokenizer
 from dail_llm.eval.metrics import calculate_perplexity
+from dail_llm.model.mode import preserve_model_mode
 from dail_llm.model.transformer import DailTransformerLM
 from dail_llm.visualisation.training_plots import plot_loss_curve, plot_val_perplexity
 
@@ -47,6 +48,7 @@ def make_batch(data_ids: torch.Tensor, batch_size: int, block_size: int, device:
 
 
 @torch.no_grad()
+@preserve_model_mode
 def estimate_loss(model, train_ids, val_ids, batch_size, block_size, device):
     model.eval()
     out = {}

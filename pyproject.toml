@@ -43,6 +43,7 @@ research = [
 
 [project.scripts]
 dail-api = "dail_llm.api.app:run"
+dail-research = "dail_llm.research.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["."]

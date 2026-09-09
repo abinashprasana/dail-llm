@@ -1,0 +1,16 @@
+name = "cpu-pilot"
+seeds = [42]
+steps = 100
+batch_size = 8
+train_chars = 500000
+eval_chars = 25000
+memory_entries = 5000
+max_seconds = 7200
+memory_gib = 4
+block_size = 256
+embed_dim = 256
+n_layers = 4
+n_heads = 8
+threads = 4
+dropout = 0.1
+learning_rate = 0.0003

@@ -9,10 +9,13 @@ import re
 import torch
 import torch.nn.functional as F
 
+from dail_llm.model.mode import preserve_model_mode
+
 # ---------------------------------------------------------------------------
 # Perplexity
 # ---------------------------------------------------------------------------
 
+@preserve_model_mode
 def calculate_language_model_metrics(
     model,
     data_tensor: torch.Tensor,

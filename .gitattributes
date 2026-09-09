@@ -1,0 +1,7 @@
+# These artifacts bind exact bytes across Windows, Linux and container builds.
+frontend/public/research-data/**/*.json -text
+dail_llm/research/data.py -text
+dail_llm/research/modeling.py -text
+dail_llm/research/training.py -text
+dail_llm/research/memory.py -text
+dail_llm/research/evaluation.py -text
