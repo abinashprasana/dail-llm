@@ -265,9 +265,6 @@ export function SceneFallback({
             </g>
           </g>
 
-          <path d="M100 155 L166 155" stroke="#c9a55c" strokeOpacity="0.48" />
-          <circle cx="176" cy="155" r="2" fill="#c9a55c" />
-          <text x="100" y="141" fill="#91a39c" opacity="0.65" fontFamily="Manrope, Arial, sans-serif" fontSize="9" letterSpacing="2.2">CHAMBER / CHARACTER MODEL</text>
         </g>
       </svg>
     </div>

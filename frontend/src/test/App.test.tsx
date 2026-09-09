@@ -37,6 +37,7 @@ describe("Dáil LLM application", () => {
 
   it("switches model lab panels with accessible tabs", async () => {
     renderRoute("/lab");
+    await screen.findByRole("tab", { name: "Generate" });
     const attention = screen.getByRole("tab", { name: "Attention" });
     fireEvent.click(attention);
     expect(attention).toHaveAttribute("aria-selected", "true");
@@ -45,6 +46,7 @@ describe("Dáil LLM application", () => {
 
   it("validates an empty generation prompt", async () => {
     renderRoute("/lab");
+    await screen.findByRole("tab", { name: "Generate" });
     fireEvent.change(screen.getByLabelText(/Seed prompt/i), { target: { value: "" } });
     fireEvent.click(screen.getByRole("button", { name: /Generate text/i }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Enter a prompt");
@@ -65,6 +67,7 @@ describe("Dáil LLM application", () => {
     });
 
     renderRoute("/lab");
+    await screen.findByRole("tab", { name: "Generate" });
     fireEvent.click(screen.getByRole("button", { name: /Generate text/i }));
     expect(await screen.findByRole("button", { name: /Model is running/i })).toBeDisabled();
     resolveGeneration?.(new Response(JSON.stringify({
@@ -101,12 +104,14 @@ describe("Dáil LLM application", () => {
     });
 
     renderRoute("/lab");
+    await screen.findByRole("tab", { name: "Generate" });
     fireEvent.click(screen.getByRole("button", { name: /Generate text/i }));
     expect(await screen.findByRole("alert")).toHaveTextContent("model service is busy");
   });
 
   it("supports arrow-key navigation across model tools", async () => {
     renderRoute("/lab");
+    await screen.findByRole("tab", { name: "Generate" });
     const generate = screen.getByRole("tab", { name: "Generate" });
     generate.focus();
     fireEvent.keyDown(generate, { key: "ArrowRight" });

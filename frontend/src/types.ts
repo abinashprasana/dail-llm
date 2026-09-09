@@ -58,7 +58,7 @@ export interface GenerationResult {
 }
 
 export interface EvaluationReport {
-  generated_at: string;
+  generated_at?: string;
   checkpoint: {
     name: string;
     parameters: number;

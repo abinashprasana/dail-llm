@@ -1,0 +1,992 @@
+{
+  "schema_version": 1,
+  "release_id": "pilot-5c5ec16ddb23",
+  "label": "CPU pilot",
+  "evidence": "Exploratory results",
+  "seed": 42,
+  "steps": 100,
+  "batch_size": 8,
+  "provenance": {
+    "binding": {
+      "config": "993c1d3eee8ecac45ef60b96b28e5c972efc978f80d5d02989707b3e9c508216",
+      "corpus": "b603d985dd69cee4b75d5aaa60a362b062eaafe949df59ef1d105f16f94fbe1d",
+      "manifest": "319199d2c2d0711a1b9aed68f86f2ed7f84ea3b2424750cd593769eb24fc5154",
+      "implementation": "0c515f8bc81733765a8ce1ee5561c8dd5814b3b96d5de515da373ddb8c135644"
+    },
+    "checkpoint_sha256": "ee4d22bb8e3354e7d9b79ae39c0a533709b82438206cbaa9019aca991e860943",
+    "tokenizer_sha256": "acf4b13897c346df6b357b0c03a3f246e61e280c4624b757c4c0e5609f46eed3",
+    "report_sha256": "02f7efaab67a7d6949bfa1428c53adf88b531838a9c9fb07420d615fba2d158d"
+  },
+  "periods": {
+    "train": [
+      "2008-01-01",
+      "2009-12-31"
+    ],
+    "validation": [
+      "2010-01-01",
+      "2010-06-30"
+    ],
+    "earlier": [
+      "2010-07-01",
+      "2010-12-31"
+    ],
+    "later": [
+      "2011-04-01",
+      "2011-09-30"
+    ]
+  },
+  "selection": {
+    "train": {
+      "candidate_groups": 27302,
+      "selected_groups": 102,
+      "oversize_groups": 0,
+      "cap": 500000,
+      "speeches": 816,
+      "characters": 494973
+    },
+    "validation": {
+      "candidate_groups": 8315,
+      "selected_groups": 5,
+      "oversize_groups": 276,
+      "cap": 25000,
+      "speeches": 32,
+      "characters": 24974
+    },
+    "earlier": {
+      "candidate_groups": 5461,
+      "selected_groups": 18,
+      "oversize_groups": 193,
+      "cap": 25000,
+      "speeches": 47,
+      "characters": 24978
+    },
+    "later": {
+      "candidate_groups": 7668,
+      "selected_groups": 13,
+      "oversize_groups": 177,
+      "cap": 25000,
+      "speeches": 35,
+      "characters": 24929
+    }
+  },
+  "counts": {
+    "rows_seen": 4443713,
+    "outside_periods": 4047201,
+    "normalized": 82038,
+    "eligible": 396512,
+    "duplicate_exclusions": 21
+  },
+  "source": "https://alexherzog.net/files/Herzog_Mikhaylov_FADS_2017.pdf",
+  "source_sha256": "761b9025c8e5bae185439eb11c53b2190fd2946d5e5537030bfa03bc0140047f",
+  "history": {
+    "none": {
+      "parameters": 3268608,
+      "splits": {
+        "earlier": {
+          "aggregate": {
+            "targets": 24931,
+            "supported": 24929,
+            "unknown": 2,
+            "mapped_token_loss": 2.471189100577567,
+            "supported_target_bpc": 3.564567428800826,
+            "coverage": 0.9999197785889054,
+            "supported_accuracy": 0.29271130009226204
+          },
+          "continuing_speakers": {
+            "targets": 1392,
+            "supported": 1392,
+            "unknown": 0,
+            "mapped_token_loss": 2.303858581630663,
+            "supported_target_bpc": 3.323765350628039,
+            "coverage": 1.0,
+            "supported_accuracy": 0.34410919540229884
+          },
+          "matched": {
+            "targets": 392,
+            "supported": 392,
+            "unknown": 0,
+            "mapped_token_loss": 2.402564846739477,
+            "supported_target_bpc": 3.4661683898051963,
+            "coverage": 1.0,
+            "supported_accuracy": 0.30612244897959184
+          },
+          "perturbations": {
+            "names": {
+              "masked_characters": 0,
+              "masked_input": {
+                "targets": 24931,
+                "supported": 24929,
+                "unknown": 2,
+                "mapped_token_loss": 2.471189100577567,
+                "supported_target_bpc": 3.564567428800826,
+                "coverage": 0.9999197785889054,
+                "supported_accuracy": 0.29271130009226204
+              },
+              "same_target_control": {
+                "targets": 24931,
+                "supported": 24929,
+                "unknown": 2,
+                "mapped_token_loss": 2.471189100577567,
+                "supported_target_bpc": 3.564567428800826,
+                "coverage": 0.9999197785889054,
+                "supported_accuracy": 0.29271130009226204
+              }
+            },
+            "phrases": {
+              "masked_characters": 2280,
+              "masked_input": {
+                "targets": 22677,
+                "supported": 22675,
+                "unknown": 2,
+                "mapped_token_loss": 2.5177000267572827,
+                "supported_target_bpc": 3.631614306783414,
+                "coverage": 0.9999118049124663,
+                "supported_accuracy": 0.2782800441014333
+              },
+              "same_target_control": {
+                "targets": 22677,
+                "supported": 22675,
+                "unknown": 2,
+                "mapped_token_loss": 2.510827680573386,
+                "supported_target_bpc": 3.621698732519693,
+                "coverage": 0.9999118049124663,
+                "supported_accuracy": 0.27907386990077176
+              }
+            }
+          }
+        },
+        "later": {
+          "aggregate": {
+            "targets": 24894,
+            "supported": 24892,
+            "unknown": 2,
+            "mapped_token_loss": 2.529843992944452,
+            "supported_target_bpc": 3.649489547862042,
+            "coverage": 0.9999196593556681,
+            "supported_accuracy": 0.2796079061545878
+          },
+          "continuing_speakers": {
+            "targets": 1160,
+            "supported": 1160,
+            "unknown": 0,
+            "mapped_token_loss": 2.3346014483221644,
+            "supported_target_bpc": 3.3681179319465784,
+            "coverage": 1.0,
+            "supported_accuracy": 0.3422413793103448
+          },
+          "matched": {
+            "targets": 434,
+            "supported": 434,
+            "unknown": 0,
+            "mapped_token_loss": 2.3233812042095696,
+            "supported_target_bpc": 3.351930541407774,
+            "coverage": 1.0,
+            "supported_accuracy": 0.33410138248847926
+          },
+          "perturbations": {
+            "names": {
+              "masked_characters": 0,
+              "masked_input": {
+                "targets": 24894,
+                "supported": 24892,
+                "unknown": 2,
+                "mapped_token_loss": 2.529843992944452,
+                "supported_target_bpc": 3.649489547862042,
+                "coverage": 0.9999196593556681,
+                "supported_accuracy": 0.2796079061545878
+              },
+              "same_target_control": {
+                "targets": 24894,
+                "supported": 24892,
+                "unknown": 2,
+                "mapped_token_loss": 2.529843992944452,
+                "supported_target_bpc": 3.649489547862042,
+                "coverage": 0.9999196593556681,
+                "supported_accuracy": 0.2796079061545878
+              }
+            },
+            "phrases": {
+              "masked_characters": 1627,
+              "masked_input": {
+                "targets": 23285,
+                "supported": 23283,
+                "unknown": 2,
+                "mapped_token_loss": 2.5624688117576304,
+                "supported_target_bpc": 3.696540258380954,
+                "coverage": 0.9999141077947177,
+                "supported_accuracy": 0.26946699308508354
+              },
+              "same_target_control": {
+                "targets": 23285,
+                "supported": 23283,
+                "unknown": 2,
+                "mapped_token_loss": 2.557853229572672,
+                "supported_target_bpc": 3.6898808088570934,
+                "coverage": 0.9999141077947177,
+                "supported_accuracy": 0.27066958725250184
+              }
+            }
+          }
+        }
+      }
+    },
+    "party": {
+      "parameters": 3271168,
+      "splits": {
+        "earlier": {
+          "aggregate": {
+            "targets": 24931,
+            "supported": 24929,
+            "unknown": 2,
+            "mapped_token_loss": 2.672020855097606,
+            "supported_target_bpc": 3.854298516662447,
+            "coverage": 0.9999197785889054,
+            "supported_accuracy": 0.27096955353203095
+          },
+          "continuing_speakers": {
+            "targets": 1392,
+            "supported": 1392,
+            "unknown": 0,
+            "mapped_token_loss": 2.5613536642885757,
+            "supported_target_bpc": 3.6952522294319032,
+            "coverage": 1.0,
+            "supported_accuracy": 0.3045977011494253
+          },
+          "matched": {
+            "targets": 392,
+            "supported": 392,
+            "unknown": 0,
+            "mapped_token_loss": 2.623179377341757,
+            "supported_target_bpc": 3.7844478790531517,
+            "coverage": 1.0,
+            "supported_accuracy": 0.27040816326530615
+          },
+          "perturbations": {
+            "names": {
+              "masked_characters": 0,
+              "masked_input": {
+                "targets": 24931,
+                "supported": 24929,
+                "unknown": 2,
+                "mapped_token_loss": 2.672020855097606,
+                "supported_target_bpc": 3.854298516662447,
+                "coverage": 0.9999197785889054,
+                "supported_accuracy": 0.27096955353203095
+              },
+              "same_target_control": {
+                "targets": 24931,
+                "supported": 24929,
+                "unknown": 2,
+                "mapped_token_loss": 2.672020855097606,
+                "supported_target_bpc": 3.854298516662447,
+                "coverage": 0.9999197785889054,
+                "supported_accuracy": 0.27096955353203095
+              }
+            },
+            "phrases": {
+              "masked_characters": 2280,
+              "masked_input": {
+                "targets": 22677,
+                "supported": 22675,
+                "unknown": 2,
+                "mapped_token_loss": 2.6925568285403485,
+                "supported_target_bpc": 3.8838673696883315,
+                "coverage": 0.9999118049124663,
+                "supported_accuracy": 0.2669900771775083
+              },
+              "same_target_control": {
+                "targets": 22677,
+                "supported": 22675,
+                "unknown": 2,
+                "mapped_token_loss": 2.6907284037431944,
+                "supported_target_bpc": 3.8812292776340795,
+                "coverage": 0.9999118049124663,
+                "supported_accuracy": 0.2671664829106946
+              }
+            }
+          }
+        },
+        "later": {
+          "aggregate": {
+            "targets": 24894,
+            "supported": 24892,
+            "unknown": 2,
+            "mapped_token_loss": 2.715375993973358,
+            "supported_target_bpc": 3.916838158060785,
+            "coverage": 0.9999196593556681,
+            "supported_accuracy": 0.26502490760083564
+          },
+          "continuing_speakers": {
+            "targets": 1160,
+            "supported": 1160,
+            "unknown": 0,
+            "mapped_token_loss": 2.5842392757021146,
+            "supported_target_bpc": 3.7282691875259277,
+            "coverage": 1.0,
+            "supported_accuracy": 0.30086206896551726
+          },
+          "matched": {
+            "targets": 434,
+            "supported": 434,
+            "unknown": 0,
+            "mapped_token_loss": 2.5665271952404956,
+            "supported_target_bpc": 3.7027160568801234,
+            "coverage": 1.0,
+            "supported_accuracy": 0.2995391705069124
+          },
+          "perturbations": {
+            "names": {
+              "masked_characters": 0,
+              "masked_input": {
+                "targets": 24894,
+                "supported": 24892,
+                "unknown": 2,
+                "mapped_token_loss": 2.715375993973358,
+                "supported_target_bpc": 3.916838158060785,
+                "coverage": 0.9999196593556681,
+                "supported_accuracy": 0.26502490760083564
+              },
+              "same_target_control": {
+                "targets": 24894,
+                "supported": 24892,
+                "unknown": 2,
+                "mapped_token_loss": 2.715375993973358,
+                "supported_target_bpc": 3.916838158060785,
+                "coverage": 0.9999196593556681,
+                "supported_accuracy": 0.26502490760083564
+              }
+            },
+            "phrases": {
+              "masked_characters": 1627,
+              "masked_input": {
+                "targets": 23285,
+                "supported": 23283,
+                "unknown": 2,
+                "mapped_token_loss": 2.7290031050775654,
+                "supported_target_bpc": 3.9364566751855143,
+                "coverage": 0.9999141077947177,
+                "supported_accuracy": 0.2616071812051712
+              },
+              "same_target_control": {
+                "targets": 23285,
+                "supported": 23283,
+                "unknown": 2,
+                "mapped_token_loss": 2.7274747806939796,
+                "supported_target_bpc": 3.934251579775938,
+                "coverage": 0.9999141077947177,
+                "supported_accuracy": 0.2616930807885582
+              }
+            }
+          }
+        }
+      }
+    },
+    "role": {
+      "parameters": 3269632,
+      "splits": {
+        "earlier": {
+          "aggregate": {
+            "targets": 24931,
+            "supported": 24929,
+            "unknown": 2,
+            "mapped_token_loss": 2.6804914358390817,
+            "supported_target_bpc": 3.8664998162453386,
+            "coverage": 0.9999197785889054,
+            "supported_accuracy": 0.270087047214088
+          },
+          "continuing_speakers": {
+            "targets": 1392,
+            "supported": 1392,
+            "unknown": 0,
+            "mapped_token_loss": 2.57291413449693,
+            "supported_target_bpc": 3.7119304624718406,
+            "coverage": 1.0,
+            "supported_accuracy": 0.30387931034482757
+          },
+          "matched": {
+            "targets": 392,
+            "supported": 392,
+            "unknown": 0,
+            "mapped_token_loss": 2.6256362759337133,
+            "supported_target_bpc": 3.7879924344677343,
+            "coverage": 1.0,
+            "supported_accuracy": 0.26785714285714285
+          },
+          "perturbations": {
+            "names": {
+              "masked_characters": 0,
+              "masked_input": {
+                "targets": 24931,
+                "supported": 24929,
+                "unknown": 2,
+                "mapped_token_loss": 2.6804914358390817,
+                "supported_target_bpc": 3.8664998162453386,
+                "coverage": 0.9999197785889054,
+                "supported_accuracy": 0.270087047214088
+              },
+              "same_target_control": {
+                "targets": 24931,
+                "supported": 24929,
+                "unknown": 2,
+                "mapped_token_loss": 2.6804914358390817,
+                "supported_target_bpc": 3.8664998162453386,
+                "coverage": 0.9999197785889054,
+                "supported_accuracy": 0.270087047214088
+              }
+            },
+            "phrases": {
+              "masked_characters": 2280,
+              "masked_input": {
+                "targets": 22677,
+                "supported": 22675,
+                "unknown": 2,
+                "mapped_token_loss": 2.7006159021345852,
+                "supported_target_bpc": 3.8954730324721654,
+                "coverage": 0.9999118049124663,
+                "supported_accuracy": 0.26535832414553473
+              },
+              "same_target_control": {
+                "targets": 22677,
+                "supported": 22675,
+                "unknown": 2,
+                "mapped_token_loss": 2.6989425147668435,
+                "supported_target_bpc": 3.8930586318769658,
+                "coverage": 0.9999118049124663,
+                "supported_accuracy": 0.2663285556780595
+              }
+            }
+          }
+        },
+        "later": {
+          "aggregate": {
+            "targets": 24894,
+            "supported": 24892,
+            "unknown": 2,
+            "mapped_token_loss": 2.718616034234299,
+            "supported_target_bpc": 3.921459168004346,
+            "coverage": 0.9999196593556681,
+            "supported_accuracy": 0.2634581391611763
+          },
+          "continuing_speakers": {
+            "targets": 1160,
+            "supported": 1160,
+            "unknown": 0,
+            "mapped_token_loss": 2.5950454448831493,
+            "supported_target_bpc": 3.7438591942144135,
+            "coverage": 1.0,
+            "supported_accuracy": 0.30258620689655175
+          },
+          "matched": {
+            "targets": 434,
+            "supported": 434,
+            "unknown": 0,
+            "mapped_token_loss": 2.59293214296965,
+            "supported_target_bpc": 3.740810344023907,
+            "coverage": 1.0,
+            "supported_accuracy": 0.30184331797235026
+          },
+          "perturbations": {
+            "names": {
+              "masked_characters": 0,
+              "masked_input": {
+                "targets": 24894,
+                "supported": 24892,
+                "unknown": 2,
+                "mapped_token_loss": 2.718616034234299,
+                "supported_target_bpc": 3.921459168004346,
+                "coverage": 0.9999196593556681,
+                "supported_accuracy": 0.2634581391611763
+              },
+              "same_target_control": {
+                "targets": 24894,
+                "supported": 24892,
+                "unknown": 2,
+                "mapped_token_loss": 2.718616034234299,
+                "supported_target_bpc": 3.921459168004346,
+                "coverage": 0.9999196593556681,
+                "supported_accuracy": 0.2634581391611763
+              }
+            },
+            "phrases": {
+              "masked_characters": 1627,
+              "masked_input": {
+                "targets": 23285,
+                "supported": 23283,
+                "unknown": 2,
+                "mapped_token_loss": 2.7325645291756633,
+                "supported_target_bpc": 3.941537694930462,
+                "coverage": 0.9999141077947177,
+                "supported_accuracy": 0.25941674182880214
+              },
+              "same_target_control": {
+                "targets": 23285,
+                "supported": 23283,
+                "unknown": 2,
+                "mapped_token_loss": 2.730705106987932,
+                "supported_target_bpc": 3.93885488532887,
+                "coverage": 0.9999141077947177,
+                "supported_accuracy": 0.2600609887042048
+              }
+            }
+          }
+        }
+      }
+    },
+    "ngram": {
+      "parameters": 0,
+      "splits": {
+        "earlier": {
+          "aggregate": {
+            "targets": 24931,
+            "supported": 24929,
+            "unknown": 2,
+            "mapped_token_loss": 1.2892461936707786,
+            "supported_target_bpc": 1.857248993710458,
+            "coverage": 0.9999197785889054,
+            "supported_accuracy": 0.6327971438886437
+          },
+          "continuing_speakers": {
+            "targets": 1392,
+            "supported": 1392,
+            "unknown": 0,
+            "mapped_token_loss": 1.2286430177516254,
+            "supported_target_bpc": 1.7725571887331206,
+            "coverage": 1.0,
+            "supported_accuracy": 0.6544540229885057
+          },
+          "matched": {
+            "targets": 392,
+            "supported": 392,
+            "unknown": 0,
+            "mapped_token_loss": 1.5935142217862404,
+            "supported_target_bpc": 2.298955065357045,
+            "coverage": 1.0,
+            "supported_accuracy": 0.5867346938775511
+          },
+          "perturbations": {}
+        },
+        "later": {
+          "aggregate": {
+            "targets": 24894,
+            "supported": 24892,
+            "unknown": 2,
+            "mapped_token_loss": 1.5772727660328563,
+            "supported_target_bpc": 2.2734380662969578,
+            "coverage": 0.9999196593556681,
+            "supported_accuracy": 0.6043708822111522
+          },
+          "continuing_speakers": {
+            "targets": 1160,
+            "supported": 1160,
+            "unknown": 0,
+            "mapped_token_loss": 1.0865673654058512,
+            "supported_target_bpc": 1.5675853496628078,
+            "coverage": 1.0,
+            "supported_accuracy": 0.7043103448275863
+          },
+          "matched": {
+            "targets": 434,
+            "supported": 434,
+            "unknown": 0,
+            "mapped_token_loss": 1.0379940535882735,
+            "supported_target_bpc": 1.4975088735840352,
+            "coverage": 1.0,
+            "supported_accuracy": 0.7188940092165899
+          },
+          "perturbations": {}
+        }
+      }
+    }
+  },
+  "memory": {
+    "uniform": {
+      "metrics": {
+        "targets": 24931,
+        "supported": 24929,
+        "unknown": 2,
+        "mapped_token_loss": 2.4575546126633236,
+        "supported_target_bpc": 3.544862143313294,
+        "coverage": 0.9999197785889054,
+        "supported_accuracy": 0.2982069076176341
+      },
+      "slices": {
+        "word_frequent": {
+          "spans": 3353,
+          "bpc": 3.667640439182327,
+          "accuracy": 0.0921562779600358
+        },
+        "word_rare": {
+          "spans": 407,
+          "bpc": 4.0785141947309365,
+          "accuracy": 0.0
+        },
+        "recurring_phrase": {
+          "spans": 165,
+          "bpc": 3.185097036572826,
+          "accuracy": 0.0
+        },
+        "word_unseen": {
+          "spans": 186,
+          "bpc": 4.583768581823483,
+          "accuracy": 0.0
+        }
+      },
+      "entries": 5000,
+      "parameters": {
+        "k": 32,
+        "weight": 0.25,
+        "temperature": 10
+      },
+      "retrieval": {
+        "seconds": 10.591949299985572,
+        "queries": 24931,
+        "ms_per_query": 0.42485055954376366
+      },
+      "copying": 0.0,
+      "tokens_per_second": 58.005421232380165,
+      "comparison": null
+    },
+    "speech_balanced": {
+      "metrics": {
+        "targets": 24931,
+        "supported": 24929,
+        "unknown": 2,
+        "mapped_token_loss": 2.4525612665329173,
+        "supported_target_bpc": 3.537657691869724,
+        "coverage": 0.9999197785889054,
+        "supported_accuracy": 0.2968029202936339
+      },
+      "slices": {
+        "word_frequent": {
+          "spans": 3353,
+          "bpc": 3.653708949342389,
+          "accuracy": 0.09841932597673725
+        },
+        "word_rare": {
+          "spans": 407,
+          "bpc": 4.082827047949295,
+          "accuracy": 0.0
+        },
+        "recurring_phrase": {
+          "spans": 165,
+          "bpc": 3.1200020259684007,
+          "accuracy": 0.0
+        },
+        "word_unseen": {
+          "spans": 186,
+          "bpc": 4.612130768604371,
+          "accuracy": 0.0
+        }
+      },
+      "entries": 5000,
+      "parameters": {
+        "k": 32,
+        "weight": 0.25,
+        "temperature": 10
+      },
+      "retrieval": {
+        "seconds": 11.222827699995833,
+        "queries": 24931,
+        "ms_per_query": 0.45015553728273366
+      },
+      "copying": 0.0,
+      "tokens_per_second": 62.87300647998356,
+      "comparison": {
+        "debates": 18,
+        "difference_bpc": -0.007204451443570189,
+        "interval": [
+          -0.01753437730867933,
+          7.064832074484882e-05
+        ],
+        "replicates": 1000,
+        "method": "Paired debate bootstrap; right minus left; no multiplicity correction"
+      }
+    },
+    "context_diverse": {
+      "metrics": {
+        "targets": 24931,
+        "supported": 24929,
+        "unknown": 2,
+        "mapped_token_loss": 2.4550424735471807,
+        "supported_target_bpc": 3.541237603668703,
+        "coverage": 0.9999197785889054,
+        "supported_accuracy": 0.29644189498174817
+      },
+      "slices": {
+        "word_frequent": {
+          "spans": 3353,
+          "bpc": 3.6589239991515656,
+          "accuracy": 0.09126155681479273
+        },
+        "word_rare": {
+          "spans": 407,
+          "bpc": 4.083373113696278,
+          "accuracy": 0.0
+        },
+        "recurring_phrase": {
+          "spans": 165,
+          "bpc": 3.139091173090808,
+          "accuracy": 0.0
+        },
+        "word_unseen": {
+          "spans": 186,
+          "bpc": 4.615750312730689,
+          "accuracy": 0.0
+        }
+      },
+      "entries": 5000,
+      "parameters": {
+        "k": 32,
+        "weight": 0.25,
+        "temperature": 10
+      },
+      "retrieval": {
+        "seconds": 36.50226590000966,
+        "queries": 24931,
+        "ms_per_query": 1.4641316393249233
+      },
+      "copying": 0.0,
+      "tokens_per_second": 18.502855725428436,
+      "comparison": {
+        "debates": 18,
+        "difference_bpc": -0.0036245396445910303,
+        "interval": [
+          -0.013011956954089769,
+          0.0032780542335670093
+        ],
+        "replicates": 1000,
+        "method": "Paired debate bootstrap; right minus left; no multiplicity correction"
+      }
+    }
+  },
+  "cohort": {
+    "pairs": 1,
+    "unmatched_earlier": 46,
+    "unmatched_later": 34,
+    "continuing_speakers": 2,
+    "continuing_speeches": {
+      "earlier": 5,
+      "later": 3
+    }
+  },
+  "verification": {
+    "sha256": "92ea7729fe66c20a373952f43fdd05c8f1647fea5770735a6244126baa5c342f",
+    "status": "passed",
+    "checks": 50
+  },
+  "references": [
+    [
+      "Herzog and Mikhaylov (2017), corpus and metadata",
+      "https://arxiv.org/abs/1708.04557"
+    ],
+    [
+      "Khandelwal et al. (ICLR 2020), kNN-LM",
+      "https://arxiv.org/abs/1911.00172"
+    ],
+    [
+      "Yogatama et al. (TACL 2021), character-level memory",
+      "https://aclanthology.org/2021.tacl-1.22/"
+    ],
+    [
+      "Nishida et al. (NAACL Findings 2025), rare-target evaluation",
+      "https://aclanthology.org/2025.findings-naacl.331/"
+    ],
+    [
+      "Hirst et al. (2014), institutional-role confounding",
+      "https://www.benjamins.com/catalog/dapsac.55.05hir"
+    ],
+    [
+      "Rheault and Cochrane (Political Analysis 2020), metadata conditioning",
+      "https://doi.org/10.1017/pan.2019.26"
+    ]
+  ],
+  "human_review": {
+    "status": "pending",
+    "items": 114,
+    "heuristic_strata": {
+      "ordinary continuation": 36,
+      "member-name span": 1,
+      "frequent phrase": 77
+    }
+  },
+  "training_history": [
+    {
+      "step": 25,
+      "train_loss": 2.7616140842437744,
+      "validation_loss": 2.7874917104588164
+    },
+    {
+      "step": 50,
+      "train_loss": 2.599235773086548,
+      "validation_loss": 2.5812535085977104
+    },
+    {
+      "step": 75,
+      "train_loss": 2.5165998935699463,
+      "validation_loss": 2.508621964321973
+    },
+    {
+      "step": 100,
+      "train_loss": 2.498610019683838,
+      "validation_loss": 2.468634985088012
+    }
+  ],
+  "execution": {
+    "elapsed_seconds": 1244.350837799997,
+    "peak_memory_bytes": 928571392
+  },
+  "examples": [
+    {
+      "prefix": "The Minister for",
+      "kind": "Fixed prefix",
+      "id": "example-1",
+      "files": {
+        "uniform": {
+          "name": "example-1-uniform.json",
+          "sha256": "01de9a83b5a8b67aa94edb4db584acb85e30ab28343d3f451fa07a505c240d5b"
+        },
+        "speech_balanced": {
+          "name": "example-1-speech_balanced.json",
+          "sha256": "1dad1acd0270559af7c85650a1cd02625663cd194ba57c9e86e95049b63b7b70"
+        },
+        "context_diverse": {
+          "name": "example-1-context_diverse.json",
+          "sha256": "9a620f0695f03fd5e6ff45f27726ca117f15d94d9a0008813e628a6b9a5c5ff2"
+        }
+      }
+    },
+    {
+      "prefix": "es of proposed National Heritage Areas. While it is not possible",
+      "kind": "Recurring phrase (heuristic)",
+      "id": "example-2",
+      "files": {
+        "uniform": {
+          "name": "example-2-uniform.json",
+          "sha256": "f4898f8650423e1ab665625d804d2af0df708887c18b33797a08ed5e6c5a2ac2"
+        },
+        "speech_balanced": {
+          "name": "example-2-speech_balanced.json",
+          "sha256": "eaff574b9f67393f6d4cc36bef6c16d89ccc2f8fc455a6743d58531e1f624f9f"
+        },
+        "context_diverse": {
+          "name": "example-2-context_diverse.json",
+          "sha256": "2470156018a458d2cd8bfd3b0aa358b4d1c8fcdd26c92c4d0aaccf0b41532f9a"
+        }
+      }
+    },
+    {
+      "prefix": "asked the Taoiseach the estimated age profile of inward migratio",
+      "kind": "Ordinary continuation (heuristic)",
+      "id": "example-3",
+      "files": {
+        "uniform": {
+          "name": "example-3-uniform.json",
+          "sha256": "6ce6b4a484030dc4fe563fc563dfe8e625720bbf5279dfa301bdd1697f8468d6"
+        },
+        "speech_balanced": {
+          "name": "example-3-speech_balanced.json",
+          "sha256": "f62b987868188075d2dbde2d1cd61f106c7385b7626f4d54a46b05ef3c648386"
+        },
+        "context_diverse": {
+          "name": "example-3-context_diverse.json",
+          "sha256": "41ede22a65b8d4cbd77cf09c4d62642e371d81e6290e25288bc65e5246b637ad"
+        }
+      }
+    },
+    {
+      "prefix": "asked the Minister for",
+      "kind": "Recurring phrase (heuristic)",
+      "id": "example-4",
+      "files": {
+        "uniform": {
+          "name": "example-4-uniform.json",
+          "sha256": "3224353274774f17481c09add9f4ffd573ce71ce8d9507ca38ab87e6f41c621f"
+        },
+        "speech_balanced": {
+          "name": "example-4-speech_balanced.json",
+          "sha256": "58b38d1dc94871e7f89e87bc11b597995351444f808abe25b53f4816cf7ae13d"
+        },
+        "context_diverse": {
+          "name": "example-4-context_diverse.json",
+          "sha256": "ba5c7f335cb2c61ca181662a3e68ab096e4c0bcc40d9199d751ab3b65b48ce77"
+        }
+      }
+    },
+    {
+      "prefix": "I have been encouraging NAMA to take a strategic approach to the",
+      "kind": "Ordinary continuation (heuristic)",
+      "id": "example-5",
+      "files": {
+        "uniform": {
+          "name": "example-5-uniform.json",
+          "sha256": "8e7977cbf8b16db5535a540ccb7e17ca28927201060382e72f29f2d41bf3b5ed"
+        },
+        "speech_balanced": {
+          "name": "example-5-speech_balanced.json",
+          "sha256": "6c20ee7a05ced6d838ac19c2e056ba369094933dfb313f84024a183aab88bf15"
+        },
+        "context_diverse": {
+          "name": "example-5-context_diverse.json",
+          "sha256": "d59d2db41cf5cbabee87aa3395a936e05fed70c8376e26fa55551e9b64f1a22a"
+        }
+      }
+    },
+    {
+      "prefix": "I am advised that, in relation to land owned by Coillte in Co. M",
+      "kind": "Ordinary continuation (heuristic)",
+      "id": "example-6",
+      "files": {
+        "uniform": {
+          "name": "example-6-uniform.json",
+          "sha256": "a25a85e6832d943ec7d8c9b34df3b2f3c39bb5af0ccb89a9cc40f6fe6a7071da"
+        },
+        "speech_balanced": {
+          "name": "example-6-speech_balanced.json",
+          "sha256": "c2777f5bd58def5bcf7714f0369f02bb23fd33a69b6761c55c713fb1ff730bcb"
+        },
+        "context_diverse": {
+          "name": "example-6-context_diverse.json",
+          "sha256": "c6033632e9bba2ecf9c8e9bfcf93c6b90e60bc0703d097e42e0d2110bc8e8393"
+        }
+      }
+    },
+    {
+      "prefix": " a joint bid for a contract that they might not be in a position",
+      "kind": "Recurring phrase (heuristic)",
+      "id": "example-7",
+      "files": {
+        "uniform": {
+          "name": "example-7-uniform.json",
+          "sha256": "27ba6207819c6e7a17c0bec9e6785f30ead8b36826d5b91bfc0b8c9884d29f48"
+        },
+        "speech_balanced": {
+          "name": "example-7-speech_balanced.json",
+          "sha256": "37512b884bf9b7c384c8dae9575a78b4c068f1f70d1e05b8dcbf3ec9605f8a14"
+        },
+        "context_diverse": {
+          "name": "example-7-context_diverse.json",
+          "sha256": "fe074f250b599c897051b46a029dfa372f29b2ca795c27c7c9fe364821a1b608"
+        }
+      }
+    },
+    {
+      "prefix": "asked the Minister for Agriculture, Fisheries and Food the amoun",
+      "kind": "Ordinary continuation (heuristic)",
+      "id": "example-8",
+      "files": {
+        "uniform": {
+          "name": "example-8-uniform.json",
+          "sha256": "ffcb08a901d9d40c37b32e60daffc8c34e5f76725e523ec9272b71e5a56f1965"
+        },
+        "speech_balanced": {
+          "name": "example-8-speech_balanced.json",
+          "sha256": "383e4cfc310f288461e88ab6ca1ae2a4c129fd6b156a39dc98945f995f64299f"
+        },
+        "context_diverse": {
+          "name": "example-8-context_diverse.json",
+          "sha256": "9e101ce3d4114064d89100c927f493cad90ea807f625cbdbbf715813fc893f38"
+        }
+      }
+    }
+  ]
+}

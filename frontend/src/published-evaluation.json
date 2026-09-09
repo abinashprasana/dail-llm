@@ -1,0 +1,52 @@
+{
+  "checkpoint": {
+    "name": "model_best.pt",
+    "parameters": 3271168,
+    "config": {
+      "block_size": 256,
+      "embed_dim": 256,
+      "n_layers": 4,
+      "n_heads": 8,
+      "dropout": 0.1
+    }
+  },
+  "metrics": {
+    "cross_entropy": 1.4030393378534776,
+    "perplexity": 4.067543838703541,
+    "bits_per_character": 2.024157894893347,
+    "next_character_accuracy": 0.5867162072823434
+  },
+  "samples": [
+    {
+      "prompt": "The Minister for",
+      "text": "The Minister for the lay pig. There arrangements who are in principles. I should like to this House did not use of bad and he can sit would be likely to develop that, but who is not raise some similar, goodwill any s",
+      "continuation": " the lay pig. There arrangements who are in principles. I should like to this House did not use of bad and he can sit would be likely to develop that, but who is not raise some similar, goodwill any s",
+      "repeated_word_trigram_rate": 0.0
+    },
+    {
+      "prompt": "In this House",
+      "text": "In this House or the parties officer holiday, qualities of people of the Minister is already at the moment the promission, that is necessary. So far a line that the commission power is against the net pursue in th",
+      "continuation": " or the parties officer holiday, qualities of people of the Minister is already at the moment the promission, that is necessary. So far a line that the commission power is against the net pursue in th",
+      "repeated_word_trigram_rate": 0.0
+    },
+    {
+      "prompt": "The question before us",
+      "text": "The question before used the Dáil to call only be a decisions at the bagance that is impossible to civil servants abte the development of the cost of the words' that least was productly about the Dublin that the Bill the c",
+      "continuation": "ed the Dáil to call only be a decisions at the bagance that is impossible to civil servants abte the development of the cost of the words' that least was productly about the Dublin that the Bill the c",
+      "repeated_word_trigram_rate": 0.0
+    },
+    {
+      "prompt": "I wish to raise",
+      "text": "I wish to raise that agricultural wages throwners and I hope for it sub-section meet used for that matters are not being relieved, if we were to the complete when the State far a holiday of the land artificattion, o",
+      "continuation": " that agricultural wages throwners and I hope for it sub-section meet used for that matters are not being relieved, if we were to the complete when the State far a holiday of the land artificattion, o",
+      "repeated_word_trigram_rate": 0.0
+    },
+    {
+      "prompt": "On the matter of",
+      "text": "On the matter of this Bill commissioners. I will referred to find performed could have able to give the tribunal year and go in the concerned better the schedwer of a manufacturer. So that is pit at a largely whom a ",
+      "continuation": " this Bill commissioners. I will referred to find performed could have able to give the tribunal year and go in the concerned better the schedwer of a manufacturer. So that is pit at a largely whom a ",
+      "repeated_word_trigram_rate": 0.0
+    }
+  ],
+  "source_sha256": "ecc3bbfa6f5fdc86c66dd6e459a5dc1971b34673a97738c95e36beccc87e3cee"
+}

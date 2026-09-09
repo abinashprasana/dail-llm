@@ -1,0 +1,127 @@
+/* Speech-memory explanation follows the existing editorial spacing. */
+.memory-sequence {
+  border-bottom: 1px solid var(--line);
+}
+.memory-story {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 90px;
+  position: relative;
+  margin-top: 50px;
+}
+.memory-sticky {
+  position: sticky;
+  top: 110px;
+  align-self: start;
+  margin: 0;
+}
+.memory-drawing {
+  display: block;
+  width: 100%;
+  max-width: 540px;
+}
+.memory-sticky figcaption {
+  color: #91a39c;
+  font-size: 11px;
+  text-align: center;
+  line-height: 1.7;
+}
+.memory-sheet {
+  transition: opacity 300ms var(--ease);
+}
+.memory-sheet.removed-sheet {
+  opacity: 0.12;
+}
+.memory-connections {
+  transition: opacity 300ms var(--ease);
+}
+.memory-story-progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+.memory-story-progress i {
+  width: 34px;
+  height: 2px;
+  background: var(--line);
+  transition: background 180ms var(--ease);
+}
+.memory-story-progress i.is-active {
+  background: var(--brass);
+}
+.memory-story-steps article {
+  min-height: 42vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 35px 0;
+}
+.memory-step-number {
+  color: var(--brass);
+  font-family: var(--display);
+  font-size: 23px;
+  margin-bottom: 18px;
+}
+.memory-story-steps h3 {
+  font-family: var(--display);
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 1.15;
+  margin: 0 0 18px;
+  letter-spacing: -0.02em;
+}
+.memory-story-steps p {
+  color: #aabbb2;
+  font-size: 14px;
+  line-height: 1.9;
+  margin: 0 0 22px;
+}
+.memory-mobile-drawing {
+  display: none;
+}
+@media (max-width: 1040px) {
+  .memory-story {
+    gap: 40px;
+  }
+}
+@media (max-width: 780px) {
+  .memory-story {
+    display: block;
+    margin-top: 20px;
+  }
+  .memory-sticky {
+    display: none;
+  }
+  .memory-mobile-drawing {
+    display: block;
+    max-width: 350px;
+    margin: -15px auto 0;
+    width: 100%;
+  }
+  .memory-story-steps article {
+    min-height: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 32px 0;
+  }
+  .memory-story-steps article:last-child {
+    border: 0;
+  }
+  .memory-step-number {
+    margin-bottom: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .memory-sheet,
+  .memory-connections,
+  .memory-story-progress i {
+    transition: none;
+  }
+  .memory-sequence.is-reduced .memory-sticky {
+    position: static;
+  }
+  .memory-story-steps article {
+    min-height: 0;
+    padding: 30px 0;
+  }
+}

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { api } from "../api";
 import { AttentionCanvas } from "../components/AttentionCanvas";
 import { SiteHeader } from "../components/SiteHeader";
@@ -352,6 +353,7 @@ export function LabPage() {
             <div className="eyebrow"><span /> Live model workspace</div>
             <h1>Model lab</h1>
             <p>Generate text, inspect held-out evidence, and read causal attention from the active checkpoint.</p>
+            <Link className="text-link lab-research-link" to="/research">Separate studies of memory and historical change <ChevronRight size={15} /></Link>
           </div>
           <div
             className={`model-status is-${healthState}`}

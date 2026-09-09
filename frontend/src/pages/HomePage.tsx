@@ -1,6 +1,6 @@
 import { ArrowRight, BookOpen, Cpu, Database, Fingerprint, FlaskConical } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
-import { useEffect, useMemo, useState } from "react";
+import { motion, useInView, useReducedMotion } from "motion/react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api";
 import { ArchitectureFlow } from "../components/ArchitectureFlow";
@@ -10,6 +10,15 @@ import { MetricCard } from "../components/MetricCard";
 import { SiteHeader } from "../components/SiteHeader";
 import { formatCompactNumber, formatMetric } from "../format";
 import type { EvaluationReport, ModelMetadata } from "../types";
+import published from "../published-evaluation.json";
+
+const MemorySequence = lazy(() => import("../components/MemorySequence").then(module => ({ default: module.MemorySequence })));
+
+function DeferredMemorySequence() {
+  const ref = useRef<HTMLDivElement>(null);
+  const visible = useInView(ref, { once: true, margin: "1000px 0px" });
+  return <div ref={ref} className="memory-section-slot">{visible && <Suspense fallback={null}><MemorySequence /></Suspense>}</div>;
+}
 
 const fallbackArchitecture = {
   block_size: 256,
@@ -28,7 +37,7 @@ export function HomePage() {
 
   useEffect(() => {
     api.model().then(setModel).catch(() => setModelError(true));
-    api.evaluation().then(setEvaluation).catch(() => setEvaluationError(true));
+    api.evaluation().then(setEvaluation).catch(() => { setEvaluation(published); setEvaluationError(true); });
   }, []);
 
   const architecture = model?.architecture ?? fallbackArchitecture;
@@ -46,8 +55,7 @@ export function HomePage() {
     ? `${(corpus.clean_bytes / 1024 / 1024).toFixed(1)} MB`
     : "6.0 MB";
   const speechCount = (corpus?.accepted_speeches ?? 9_080).toLocaleString("en-IE");
-  const sample = evaluation?.samples?.[0]?.text ??
-    "The Minister for the lay pig. There arrangements who are in principles. I should like to this House did not use of bad and he can sit would be likely to develop that...";
+  const sample = evaluation?.samples?.[0]?.text ?? published.samples[0].text;
 
   const stats = useMemo(() => [
     { value: formatCompactNumber(architecture.parameters), label: "parameters" },
@@ -68,11 +76,10 @@ export function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={reducedMotion ? { duration: 0.18 } : undefined}
             >
-              <div className="eyebrow"><span /> Irish parliamentary language model</div>
               <h1>Parliamentary debate, <em>modeled character by character</em></h1>
               <p className="hero-lede">
-                Dáil LLM is a {formatCompactNumber(architecture.parameters)}-parameter decoder-only transformer trained on
-                Dáil Éireann debates. It runs locally, without an external model API.
+                A {formatCompactNumber(architecture.parameters)}-parameter transformer trained on Dáil Éireann debates.
+                Generate text, inspect attention, and explore studies of speech memory and historical change.
               </p>
               <div className="hero-actions">
                 <Link className="button button-primary" to="/lab">
@@ -87,11 +94,10 @@ export function HomePage() {
                 <p className="service-note">Live model status is unavailable. Evaluation figures below are current.</p>
               )}
               {evaluationError && !modelError && (
-                <p className="service-note">The evaluation record is unavailable. Model architecture figures below are current.</p>
+                <p className="service-note">Live evaluation is unavailable. Evidence below uses the saved published record.</p>
               )}
               <p className="hero-provenance">
                 <a href="#evidence">Verified checkpoint</a>
-                <span aria-hidden="true">·</span>
                 <a href="#data">Dáil Éireann debates, {dateRange}</a>
               </p>
             </motion.div>
@@ -107,8 +113,7 @@ export function HomePage() {
         <section className="position-statement page-width" aria-label="Research position">
           <div className="statement-mark">D</div>
           <p>
-            A deliberately compact transformer, built to make the mechanics of causal attention visible and testable
-            against a distinct parliamentary corpus.
+            Dáil LLM supports reproducible training, speech-memory inspection, and evaluation across historical periods.
           </p>
         </section>
 
@@ -155,27 +160,31 @@ export function HomePage() {
                 Speeches under 50 characters and speeches above a 40% non-ASCII threshold were excluded.
               </p>
               <p>
-                The corpus is divided into held-out training, validation, and test material. The generated dataset manifest
-                supplies the extraction dates, counts, and split sizes shown here.
+                The published corpus is divided into training, validation, and test material. The separate research
+                pipeline retains Unicode and uses whole debate groups from 2008–2011.
               </p>
               <a className="text-link" href="https://doi.org/10.7910/DVN/6MZN76" target="_blank" rel="noreferrer">
                 View the dataset citation <ArrowRight size={15} />
               </a>
+              <Link className="text-link archive-research-link" to="/research?view=methods">Read the research preparation method <ArrowRight size={15} /></Link>
             </div>
           </div>
         </section>
+
+        <DeferredMemorySequence />
 
         <section className="content-section evidence-section" id="evidence">
           <div className="page-width">
             <div className="split-heading evidence-heading">
               <div>
-                <div className="eyebrow"><span /> Held-out evidence</div>
+                <div className="eyebrow"><span /> Published checkpoint</div>
                 <h2>Measured on held-out parliamentary text</h2>
               </div>
               <p>
-                Perplexity and next-character accuracy describe the model directly. Each saved sample is generated with a fixed seed so results can be reproduced.
+                These measurements belong to the checkpoint served in the model lab. Research results use separate checkpoints and evaluation conventions.
               </p>
             </div>
+            {evaluationError && <details className="service-note"><summary>Saved published evaluation</summary><p style={{ overflowWrap: "anywhere" }}>Source SHA-256: {published.source_sha256}</p></details>}
             <div className="metric-grid">
               <MetricCard index={0} label="Perplexity" value={formatMetric(evaluation?.metrics.perplexity, 2)} note="Average uncertainty on held-out characters" />
               <MetricCard index={1} label="Bits per character" value={formatMetric(evaluation?.metrics.bits_per_character, 3)} note="Information required for each prediction" />
@@ -208,6 +217,7 @@ export function HomePage() {
               <div><Database size={19} /><span>Trace the dataset</span></div>
             </div>
             <Link className="button button-parchment" to="/lab">Enter the model lab <ArrowRight size={17} /></Link>
+            <Link className="text-link invitation-research" to="/research">Explore the research <ArrowRight size={16} /></Link>
           </div>
         </section>
       </main>
@@ -215,7 +225,7 @@ export function HomePage() {
       <footer className="site-footer">
         <div className="page-width footer-grid">
           <div><span className="footer-name">Dáil LLM</span><p>Irish parliamentary language, modeled one character at a time.</p></div>
-          <p>Dataset: Proksch, S.O. and Slapin, J.B. (2010), Harvard Dataverse.</p>
+          <p>Dataset: Alexander Herzog and Slava J. Mikhaylov (2017), Harvard Dataverse.</p>
           <a href="https://doi.org/10.7910/DVN/6MZN76" target="_blank" rel="noreferrer">DOI 10.7910/DVN/6MZN76</a>
         </div>
       </footer>

@@ -1,73 +1,99 @@
 import { gzipSync } from "node:zlib";
-import { readFile, readdir } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
-const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const distRoot = path.join(projectRoot, "dist");
-const assetsRoot = path.join(distRoot, "assets");
-
-const budgets = {
-  "initial JavaScript": { raw: 425_000, gzip: 140_000 },
-  "chamber JavaScript": { raw: 900_000, gzip: 245_000 },
-  "application CSS": { raw: 40_000, gzip: 10_000 },
-};
-
-function assetPathFromHtml(html, expression, label) {
-  const match = html.match(expression);
-  if (!match) throw new Error(`Could not find ${label} in dist/index.html.`);
-  return path.join(distRoot, match[1].replace(/^\//, ""));
+const root = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../dist",
+);
+const manifest = JSON.parse(
+  await readFile(path.join(root, ".vite/manifest.json"), "utf8"),
+);
+function closure(key, found = new Set()) {
+  if (found.has(key)) return found;
+  if (!manifest[key]) throw new Error(`Missing build entry: ${key}`);
+  found.add(key);
+  for (const dependency of manifest[key].imports ?? [])
+    closure(dependency, found);
+  return found;
 }
-
-async function measure(filePath) {
-  const contents = await readFile(filePath);
-  return { raw: contents.byteLength, gzip: gzipSync(contents).byteLength };
-}
-
-function formatBytes(value) {
-  return `${value.toLocaleString("en-US")} B`;
-}
-
-async function main() {
-  const html = await readFile(path.join(distRoot, "index.html"), "utf8");
-  const assetNames = await readdir(assetsRoot);
-  const chamberAssets = assetNames.filter((name) => /^ChamberCanvas-[\w-]+\.js$/.test(name));
-  if (chamberAssets.length !== 1) {
-    throw new Error(`Expected one lazy ChamberCanvas JavaScript asset, found ${chamberAssets.length}.`);
-  }
-
-  const files = {
-    "initial JavaScript": assetPathFromHtml(
-      html,
-      /<script[^>]+type="module"[^>]+src="([^"]+\.js)"/,
-      "the initial JavaScript asset",
+const initial = closure("index.html");
+function files(keys, type) {
+  return [
+    ...new Set(
+      [...keys].flatMap((key) =>
+        type === "css" ? (manifest[key].css ?? []) : [manifest[key].file],
+      ),
     ),
-    "chamber JavaScript": path.join(assetsRoot, chamberAssets[0]),
-    "application CSS": assetPathFromHtml(
-      html,
-      /<link[^>]+rel="stylesheet"[^>]+href="([^"]+\.css)"/,
-      "the application stylesheet",
-    ),
-  };
-
-  let failed = false;
-  for (const [label, filePath] of Object.entries(files)) {
-    const size = await measure(filePath);
-    const budget = budgets[label];
-    const rawPass = size.raw <= budget.raw;
-    const gzipPass = size.gzip <= budget.gzip;
-    failed ||= !rawPass || !gzipPass;
-    const status = rawPass && gzipPass ? "PASS" : "FAIL";
-    console.log(
-      `${status} ${label}: raw ${formatBytes(size.raw)} / ${formatBytes(budget.raw)}, ` +
-      `gzip ${formatBytes(size.gzip)} / ${formatBytes(budget.gzip)}`,
+  ];
+}
+let failed = false;
+async function check(label, names, rawLimit, gzipLimit) {
+  const contents = await Promise.all(
+    names.map((name) => readFile(path.join(root, name))),
+  );
+  const raw = contents.reduce((sum, data) => sum + data.length, 0);
+  const gzip = contents.reduce((sum, data) => sum + gzipSync(data).length, 0);
+  const pass = raw <= rawLimit && gzip <= gzipLimit;
+  failed ||= !pass;
+  console.log(
+    `${pass ? "PASS" : "FAIL"} ${label}: ${raw} B raw / ${gzip} B gzip`,
+  );
+}
+await check(
+  "initial JavaScript (all static imports)",
+  files(initial, "js"),
+  425_000,
+  140_000,
+);
+await check("application CSS", files(initial, "css"), 40_000, 10_000);
+for (const [key, label, raw, gzip] of [
+  ["src/components/ChamberCanvas.tsx", "chamber", 900_000, 245_000],
+  ["src/pages/ResearchPage.tsx", "research", 220_000, 70_000],
+  ["src/components/MemorySequence.tsx", "memory explanation", 35_000, 12_000],
+]) {
+  const unique = new Set(
+    [...closure(key)].filter((item) => !initial.has(item)),
+  );
+  await check(`${label} JavaScript`, files(unique, "js"), raw, gzip);
+  if (key !== "src/components/ChamberCanvas.tsx")
+    await check(`${label} CSS`, files(unique, "css"), 30_000, 8_000);
+}
+const summaryBytes = await readFile(
+  path.join(root, "research-data/pilot/summary.json"),
+);
+const summary = JSON.parse(summaryBytes);
+if (summaryBytes.length > 150_000)
+  throw new Error("Research summary exceeds 150 KB");
+let maximum = 0;
+for (const example of summary.examples) {
+  for (const [policy, file] of Object.entries(example.files)) {
+    if (
+      !/^example-\d+-(uniform|speech_balanced|context_diverse)\.json$/.test(
+        file.name,
+      )
+    )
+      throw new Error("Invalid research file name");
+    const bytes = await readFile(
+      path.join(root, "research-data/pilot", file.name),
     );
+    if (createHash("sha256").update(bytes).digest("hex") !== file.sha256)
+      throw new Error(`Example hash mismatch: ${file.name}`);
+    const data = JSON.parse(bytes);
+    if (
+      data.original.release_id !== summary.release_id ||
+      data.original.policy !== policy ||
+      data.original.prefix !== example.prefix
+    )
+      throw new Error("Mixed research release");
+    maximum = Math.max(maximum, bytes.length);
+    if (bytes.length > 250_000)
+      throw new Error(`Example exceeds 250 KB: ${file.name}`);
   }
-
-  if (failed) process.exitCode = 1;
 }
-
-main().catch((error) => {
-  console.error(`Bundle budget check failed: ${error.message}`);
-  process.exitCode = 1;
-});
+console.log(
+  `PASS research artifacts: summary ${summaryBytes.length} B; largest example ${maximum} B; hashes verified`,
+);
+if (failed) process.exitCode = 1;

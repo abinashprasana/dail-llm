@@ -40,7 +40,7 @@ export const TRACE_SEQUENCE_DURATION_MS =
   TRACE_START_DELAY_MS + TRACE_STEPS.reduce((total, step) => total + step.durationMs, 0);
 
 export const TRACE_CAPTIONS: Readonly<Record<TraceStage, string>> = {
-  idle: "Follow one character through the model.",
+  idle: "An illustration of prediction. Inspect actual attention in the model lab.",
   speaker: TRACE_STEPS[0].caption,
   attention: TRACE_STEPS[1].caption,
   prediction: TRACE_STEPS[2].caption,

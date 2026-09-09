@@ -8,9 +8,10 @@ export default defineConfig({
     host: "127.0.0.1",
     proxy: {
       "/api": "http://127.0.0.1:8000",
-      "/research": "http://127.0.0.1:8000",
+      "^/research/[^/]+\\.png$": "http://127.0.0.1:8000",
     },
   },
+  build: { manifest: true },
   test: {
     environment: "jsdom",
     setupFiles: "./src/test/setup.ts",
