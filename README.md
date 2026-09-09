@@ -4,6 +4,15 @@
 
 **A character-level language model trained from scratch on Irish parliamentary debate.**
 
+The offline research pipeline adds reproducible training, speech-memory inspection,
+and evaluation across historical periods. See [the research guide](docs/research.md)
+for the CPU pilot, full-study commands, and cited experimental methods. Its results
+and checkpoints are separate from the application described below.
+
+The [Research interface guide](docs/research-ui.md) covers recorded examples,
+optional live inspection, and deployment configuration. The
+[verification record](docs/ui-verification.md) lists the checks and their limits.
+
 [![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-From%20Scratch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org)
 [![Deployment](https://img.shields.io/badge/Deployment-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://dail-llm.vercel.app/)
@@ -33,6 +42,8 @@ There's a front end too — React and TypeScript, sitting on top of the FastAPI 
 [![Open Live App](https://img.shields.io/badge/Open%20Live%20App%20%F0%9F%9A%80-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://dail-llm.vercel.app/)
 
 It's live on Vercel, no setup required. Type a prompt and the model continues it. Pick a layer and a head and you'll see the attention heatmap for that exact generation — all 4 layers, 8 heads each are available. The evaluation page underneath has the training curves and the numbers below, straight from the last run.
+
+There's also a [Research page](https://dail-llm.vercel.app/research), separate from the served checkpoint. It walks through the completed CPU pilot — speech memory, historical comparisons, methods — using recorded examples that are checked into the repo, so none of it depends on a live research backend being up.
 
 ---
 
@@ -84,7 +95,7 @@ Harvard Dataverse using the citation below. Every extraction writes
 [`outputs/dataset_manifest.json`](outputs/dataset_manifest.json) recording the exact date range,
 speech count and SHA-256 of the text that was produced.
 
-> **Citation:** Proksch, S.O. and Slapin, J.B. (2010). *Database of Parliamentary Speeches in Ireland, 1919–2013*. Harvard Dataverse. https://doi.org/10.7910/DVN/6MZN76
+> **Citation:** Herzog, A. and Mikhaylov, S.J. (2017). *Database of Parliamentary Speeches in Ireland, 1919–2013*. Harvard Dataverse. https://doi.org/10.7910/DVN/6MZN76
 
 ---
 
@@ -263,7 +274,8 @@ dail-llm/
 │   ├── 📂 model/
 │   │   ├── transformer.py            full model architecture (DailTransformerLM)
 │   │   ├── train.py                  training loop with checkpointing
-│   │   └── generate.py               command line text generation
+│   │   ├── generate.py               command line text generation
+│   │   └── mode.py                   restores a model's train/eval mode after a metrics call
 │   ├── 📂 eval/
 │   │   ├── metrics.py                perplexity, accuracy, repetition and BLEU functions
 │   │   └── evaluate.py               evaluation runner, writes the JSON and Markdown reports
@@ -272,37 +284,62 @@ dail-llm/
 │   │   └── training_plots.py         loss and perplexity curve plots
 │   ├── 📂 rag/
 │   │   └── retriever.py              TF-IDF retrieval over SQLite document store
-│   └── 📂 api/
-│       ├── app.py                    FastAPI application factory and React host
-│       ├── service.py                model service, generation and attention extraction
-│       ├── runtime.py                concurrency limits, queueing and rate limiting
-│       ├── schemas.py                request and response models
-│       └── __main__.py               `python -m dail_llm.api` entry point
+│   ├── 📂 api/
+│   │   ├── app.py                    FastAPI application factory, React host and research routes
+│   │   ├── service.py                model service, generation and attention extraction
+│   │   ├── runtime.py                concurrency limits, queueing and rate limiting
+│   │   ├── schemas.py                request and response models
+│   │   └── __main__.py               `python -m dail_llm.api` entry point
+│   └── 📂 research/                  offline, reproducible experiments — separate from the served app
+│       ├── data.py                   streams the archive format, selects whole debate groups
+│       ├── modeling.py               versioned tokenizer, speech-local windows, conditioning
+│       ├── training.py               seeded CPU training with exact same-environment resume
+│       ├── memory.py                 exact CPU speech memory with verifiable interventions
+│       ├── evaluation.py             baselines, historical cohorts, evaluation slices
+│       ├── reporting.py              reports built only from verified artifacts
+│       ├── verify.py                 rechecks a completed run against independent recomputation
+│       ├── publication.py            builds the public release and the private runtime bundle
+│       ├── common.py                 artifact hashing, atomic writes, execution budgets
+│       └── __main__.py               `python -m dail_llm.research <command>` / `dail-research`
 │
 ├── 📂 frontend/                      React 19 + TypeScript + Vite interface
+│   ├── public/research-data/pilot/   checked-in recorded examples for the Research page
 │   ├── src/
-│   │   ├── pages/                    HomePage and LabPage
-│   │   ├── components/               hero scene, attention canvas, metric cards, header
-│   │   ├── api.ts                    typed client for the FastAPI endpoints
+│   │   ├── pages/                    HomePage, LabPage and ResearchPage
+│   │   ├── components/               hero scene, attention canvas, metric cards, header, memory sequence
+│   │   ├── api.ts / research.ts      typed clients for the FastAPI and research endpoints
 │   │   └── test/                     Vitest component tests
-│   ├── e2e/                          Playwright responsive and reduced-motion tests
-│   ├── scripts/check-bundle-budget.mjs   fails the build if the bundle grows too large
+│   ├── e2e/                          Playwright responsive, reduced-motion and research-view tests
+│   ├── scripts/check-bundle-budget.mjs   fails the build if a bundle grows past its budget
 │   └── package.json                  pnpm scripts: dev, build, lint, test, test:e2e
 │
-├── 📂 tests/                         pytest suite: API, runtime, checkpoint, tokenizer, splits
+├── 📂 experiments/                   research profiles: pilot.toml (CPU pilot) and full.toml (three-seed study)
+├── 📂 scripts/
+│   ├── smoke_http.py                 exercises the production HTTP surface of a running server
+│   └── verify_research_release.py    audits a public release against its private source
+├── 📂 docs/
+│   ├── research.md                   research CLI, data preparation and cited experimental methods
+│   ├── pilot-results.md              the completed CPU pilot's numbers, scope and limitations
+│   ├── research-ui.md                Research page views, publishing a release, live inspection
+│   └── ui-verification.md            the check log for the Research interface itself
+│
+├── 📂 tests/                         pytest suite: API, runtime, checkpoint, tokenizer, splits, research, security
 ├── 📂 legacy/                        earlier Streamlit prototype, kept for reference
-├── 📂 .github/workflows/ci.yml       backend, frontend and container CI
+├── 📂 .github/workflows/ci.yml       backend, frontend and container CI (both build-arg variants)
 │
 └── 📂 outputs/
     ├── checkpoints/                  trained model weights (model_best.pt is the one served)
     ├── plots/                        loss curves and perplexity plots
     ├── dataset_manifest.json         provenance of the extracted corpus
     ├── evaluation_results.json       machine-readable evaluation report
-    └── evaluation_results.md         full evaluation report
+    ├── evaluation_results.md         full evaluation report
+    └── research/                     research run directories (not tracked in git)
 ```
 
 Not tracked in git: `dataverse_files/` (the raw dataset), `data/` (generated splits and the SQLite
-store), `frontend/node_modules/` and `frontend/dist/`.
+store), `outputs/research/` (research run directories), `frontend/node_modules/` and `frontend/dist/`.
+`frontend/public/research-data/pilot/` is the exception — those recorded examples are checked in on
+purpose so the Research page works without a live backend.
 
 ---
 
@@ -324,7 +361,9 @@ pip install -e ".[research]"
 
 `pip install -r requirements.txt` installs only the serving dependencies — torch, FastAPI and
 uvicorn. The `research` extra adds `ftfy`, `numpy`, `scikit-learn`, `tqdm` and `matplotlib`, which
-the extraction, RAG and plotting steps need. Use `.[dev]` for the test and lint tooling.
+the extraction, RAG and plotting steps need, and it's also what the offline research CLI needs to
+run at all. Use `.[dev]` for the test and lint tooling, or `.[dev,research]` for the full suite —
+that's what CI installs.
 
 **3. Download the dataset**
 
@@ -352,7 +391,20 @@ docker build -t dail-llm .
 docker run --rm -p 8000:8000 -e PORT=8000 dail-llm
 ```
 
-Then open `http://localhost:8000` in your browser.
+Then open `http://localhost:8000` in your browser. The Research page's recorded examples work out
+of the box — they're already in the built frontend. To also enable live inspection against a real
+research run, build with the research dependencies and mount a private runtime bundle:
+
+```bash
+docker build --build-arg INSTALL_RESEARCH=true -t dail-llm:research .
+docker run --rm -p 8000:8000 \
+  --mount type=bind,source=/absolute/path/private-runtime,target=/research-private,readonly \
+  -e DAIL_RESEARCH_RUN=/research-private dail-llm:research
+```
+
+That private bundle comes from `python -m dail_llm.research.publication --private-bundle` — see
+[the interface guide](docs/research-ui.md) for the full export and deployment steps. Without it,
+`docker build` (no build arg) still runs everything else exactly as before.
 
 <details>
 <summary>🖥️ Run locally without Docker</summary>
@@ -395,12 +447,15 @@ python -m dail_llm.model.generate --prompt "The Minister for" --max_new_tokens 3
 <summary>🧪 Run the tests</summary>
 
 ```bash
-pip install -e ".[dev]"
+pip install -e ".[dev,research]"
 ruff check dail_llm tests
 pytest -m "not integration"
 ```
 
-Drop the marker filter to include the tests that load the trained checkpoint. Frontend checks:
+The research extra is required here too — several tests import `dail_llm.research`, which depends
+on `numpy` and `scikit-learn`. Drop the marker filter to include the tests that load the trained
+checkpoint. The suite also runs a synthetic end-to-end research study, so it never needs the real
+archive. Frontend checks:
 
 ```bash
 cd frontend
@@ -408,6 +463,9 @@ pnpm run lint
 pnpm run test
 pnpm run test:e2e
 ```
+
+`test:e2e` now covers the four Research page views alongside the existing responsive and
+reduced-motion cases.
 </details>
 
 ---
@@ -423,11 +481,19 @@ The FastAPI app serves the React bundle at `/` and exposes these endpoints.
 | `GET` | `/api/v1/evaluation` | The contents of `outputs/evaluation_results.json` |
 | `POST` | `/api/v1/generate` | Generate text from a prompt, temperature and token count |
 | `POST` | `/api/v1/attention` | Attention weights for a prompt across all layers and heads |
+| `GET` | `/api/v1/research/capabilities` | The published release id and whether live inspection is enabled |
+| `POST` | `/api/v1/research/inspect` | Re-run speech-memory retrieval for a prefix, optionally excluding one speech |
+| `GET` | `/research` | The Research page (served whether or not live inspection is enabled) |
 | `GET` | `/api/docs` | Interactive Swagger UI for the API |
 | `GET` | `/api/openapi.json` | OpenAPI schema |
 
 Generation is serialised behind a concurrency limiter with a bounded queue and a per-client rate
-limit, so a single CPU container stays responsive.
+limit, so a single CPU container stays responsive. `/api/v1/research/inspect` shares that same gate
+and rate limit, and only works at all when `DAIL_RESEARCH_RUN` points at a valid private bundle —
+otherwise it returns 503 and the Research page falls back to its recorded examples. The rate limiter
+keys off the address the ASGI server resolves for the connection, not a client-supplied
+`X-Forwarded-For` header; put a reverse proxy's trusted-proxy configuration in front of it rather
+than trusting forwarded headers directly.
 
 ### Environment variables
 
@@ -443,29 +509,26 @@ Copy [`.env.example`](.env.example) as a starting point.
 | `DAIL_RATE_LIMIT_REQUESTS` | `5` | Requests per client per window |
 | `DAIL_RATE_LIMIT_WINDOW` | `60` | Rate limit window in seconds |
 | `PORT` | `8000` | Port the container listens on |
+| `DAIL_RESEARCH_RUN` | unset | Path to a private research runtime bundle; enables live inspection |
+| `DAIL_RESEARCH_PUBLIC` | `frontend/dist/research-data/pilot` | Where the published (public) research release is read from |
 
 ---
 
 ## ⚠️ Limitations
 
-This is a small educational project, not a production language model. Keep that in mind before reading too much into the outputs.
+The decoder models character sequences in parliamentary text. Its outputs can be incoherent or factually incorrect; the evaluation measures prediction rather than factual reliability.
 
-The model has no concept of a word — it operates on individual characters, so grammatical coherence was never really on the table. Its context window is 256 characters, which is only about 40 to 50 words, so it's forgotten the start of a sentence before it reaches the end. And the training data itself is thin: 6 MB of text from a few weeks in 1950, run through 3.27 million parameters, which is a fraction of what even the smallest public language models carry.
+Character-level models can learn word patterns and grammar. This checkpoint has a
+256-character context, 3.27 million parameters, and a small training sample from
+1950. Its generated samples show limited coherence. The offline research pipeline
+tests those limitations with controlled baselines and separate evaluation data;
+the saved application scores do not establish the cause of each failure.
 
-Given all that, it still learned something real: parliamentary vocabulary in roughly the right spots, punctuation that mostly lands, and generation that never loops.
-
-<div align="center">
-
-| 🔧 Possible Improvement | 📈 Expected Effect |
-|:---|:---|
-| BPE or WordPiece tokeniser | 256 tokens would cover roughly 150 words instead of 40 |
-| Sample across the full 1919–2013 range | Broad era coverage instead of ten weeks of 1950 |
-| Larger model (8 layers, 512 dim) | More capacity for pattern generalisation |
-| More training data (100 MB) | Broader vocabulary and phrase exposure |
-| GPU training | 50 to 100 times faster, enabling longer runs |
-| Fine-tuning GPT-2 on this corpus | Start from a model that already knows English |
-
-</div>
+The CPU pilot does not establish an improvement from speech-memory selection.
+The five-gram baseline outperforms its briefly trained transformers, and the
+historical matched comparison contains only one pair. The next planned experiment
+is the longer, three-seed study described in the research guide. It has not been
+run, so its outcome remains unknown.
 
 ---
 
