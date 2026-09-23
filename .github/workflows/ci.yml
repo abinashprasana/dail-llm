@@ -22,7 +22,9 @@ jobs:
       - run: pytest -m "not integration"
 
   frontend:
-    runs-on: ubuntu-latest
+    # Visual baselines were captured and reviewed on Windows. Use the same OS
+    # so font rasterization does not fail otherwise unchanged screenshots.
+    runs-on: windows-latest
     defaults:
       run:
         working-directory: frontend
