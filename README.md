@@ -4,15 +4,6 @@
 
 **A character-level language model trained from scratch on Irish parliamentary debate.**
 
-The offline research pipeline adds reproducible training, speech-memory inspection,
-and evaluation across historical periods. See [the research guide](docs/research.md)
-for the CPU pilot, full-study commands, and cited experimental methods. Its results
-and checkpoints are separate from the application described below.
-
-The [Research interface guide](docs/research-ui.md) covers recorded examples,
-optional live inspection, and deployment configuration. The
-[verification record](docs/ui-verification.md) lists the checks and their limits.
-
 [![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-From%20Scratch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org)
 [![Deployment](https://img.shields.io/badge/Deployment-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://dail-llm.vercel.app/)
@@ -27,6 +18,22 @@ optional live inspection, and deployment configuration. The
 
 ---
 
+## 🧭 At a Glance
+
+| | |
+|:---|:---|
+| **What it is** | A 3.27M-parameter character-level transformer I wrote from scratch in PyTorch and trained on Dáil Éireann debates. |
+| **Why I built it** | Calling a pretrained model teaches you very little about how one works. I wanted to write every part myself: the tokenizer, attention, the training loop and the evaluation. |
+| **Who it's for** | People learning how transformers work inside, and anyone reviewing this who wants to see the model rather than an API call. |
+| **Compared against** | A Witten–Bell character five-gram model, scored on the same held-out speeches. |
+| **What I found** | At this training budget the five-gram won: 1.86 bits per character against 3.54 for the best pilot transformer. Speech-memory selection didn't produce a clear gain either, since both confidence intervals cross zero. I've reported that rather than tune until something looked better. |
+| **What I built** | The model, a FastAPI service, a React lab where you can generate text and read the attention heads, and a Research page that replays recorded pilot results. |
+| **Where it runs** | [Live on Vercel](https://dail-llm.vercel.app/), locally with `docker compose up --build`, and checked by GitHub Actions CI on every push. |
+
+The full numbers are in [the pilot results](docs/pilot-results.md).
+
+---
+
 ## 📖 What This Project Is
 
 I built this project to understand how transformers actually work, not just in theory but from the ground up. Instead of using a pretrained model or someone else's tokenizer, I wrote everything from scratch in PyTorch and trained it on real speeches from the Dáil Éireann, the lower house of the Irish parliament. The Dáil has been sitting since January 1919, and the source dataset records every speech made by every elected TD across nearly a century of Irish legislative history.
@@ -34,6 +41,15 @@ I built this project to understand how transformers actually work, not just in t
 The model learns to generate text that looks like parliamentary debate, one character at a time. No pretrained weights, no external APIs, nothing running in the cloud. Everything happens on a CPU on my own machine.
 
 There's a front end too, React and TypeScript, sitting on top of the FastAPI service, so you don't have to read JSON to see what the model does.
+
+The offline research pipeline adds reproducible training, speech-memory inspection,
+and evaluation across historical periods. See [the research guide](docs/research.md)
+for the CPU pilot, full-study commands, and cited experimental methods. Its results
+and checkpoints are separate from the application described below.
+
+The [Research interface guide](docs/research-ui.md) covers recorded examples,
+optional live inspection, and deployment configuration. The
+[verification record](docs/ui-verification.md) lists the checks and their limits.
 
 ---
 

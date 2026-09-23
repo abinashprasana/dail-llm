@@ -113,7 +113,7 @@ export function HomePage() {
         <section className="position-statement page-width" aria-label="Research position">
           <div className="statement-mark">D</div>
           <p>
-            Dáil LLM supports reproducible training, speech-memory inspection, and evaluation across historical periods.
+            I built every part of this model myself to see how language models work. The most useful finding so far: a simple five-gram model still beats it at this scale.
           </p>
         </section>
 
