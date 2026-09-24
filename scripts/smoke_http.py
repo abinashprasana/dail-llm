@@ -20,7 +20,7 @@ def main():
         try:
             if json.loads(get("/api/v1/health"))["model_loaded"]:
                 break
-        except (URLError, TimeoutError):
+        except (URLError, TimeoutError, ConnectionError):
             pass
         time.sleep(1)
     else:
