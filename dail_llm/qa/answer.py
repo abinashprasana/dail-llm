@@ -12,7 +12,7 @@ from contextlib import nullcontext
 from datetime import date
 from typing import Any, TypedDict
 
-from .corpus import Passage, words
+from .corpus import Passage, query_terms, words
 from .index import Retriever
 
 PROMPT_VERSION = "qa-claims-v1"
@@ -165,7 +165,13 @@ def build_graph(retriever: Retriever):
 
     def grade(state: QAState) -> QAState:
         passages = state.get("passages", [])
-        return {"status": "evidence_found" if passages else "no_evidence"}
+        terms = set(query_terms(state["question"]))
+        required = min(2, len(terms))
+        supported = any(
+            len(terms & set(words(" ".join((p.text, p.title, p.speaker))))) >= required
+            for p in passages
+        ) if required else False
+        return {"status": "evidence_found" if supported else "no_evidence"}
 
     def generate(state: QAState) -> QAState:
         passages = state["passages"]
@@ -188,7 +194,8 @@ def build_graph(retriever: Retriever):
                     "cited_ids": [p.passage_id for p in passages[:3]]}
 
     def refuse(_: QAState) -> QAState:
-        return {"answer": None, "status": "insufficient_evidence", "cited_ids": []}
+        return {"answer": None, "status": "insufficient_evidence", "cited_ids": [],
+                "passages": []}
 
     graph = StateGraph(QAState)
     graph.add_node("analyze", select_query)

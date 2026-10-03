@@ -31,6 +31,7 @@ def test_parse_and_incremental_index(tmp_path: Path):
     assert index_corpus(raw, path)["changed_days"] == 1
     assert index_corpus(raw, path)["changed_days"] == 0
     assert SQLiteRetriever(path).search("housing", "2025-01-01", "2025-12-31")
+    assert SQLiteRetriever(path).search("Córk", "2025-01-01", "2025-12-31")
     assert not SQLiteRetriever(path).search("housing", "2026-01-01", None)
 
 
@@ -54,6 +55,9 @@ def test_graph_returns_sources_without_model(tmp_path: Path, monkeypatch):
     assert result["status"] == "sources_only"
     assert result["citation_ids"] == ["dail:2025-06-01:dbsect_4:spk_2"]
     assert ask("What about submarines?", SQLiteRetriever(path))["status"] == "insufficient_evidence"
+    weak = ask("Housing submarines", SQLiteRetriever(path))
+    assert weak["status"] == "insufficient_evidence"
+    assert weak["sources"] == []
 
 
 def test_qa_api_dates_and_missing_index(tmp_path: Path, monkeypatch):
