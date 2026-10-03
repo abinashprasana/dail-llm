@@ -24,6 +24,7 @@ from dail_llm.api.schemas import (
     GenerateRequest,
     GenerateResponse,
     HealthResponse,
+    QARequest,
     ResearchInspectRequest,
 )
 from dail_llm.api.service import ModelService, PromptValidationError
@@ -79,6 +80,7 @@ def create_app(load_model_on_start: bool = True) -> FastAPI:
         app.state.model_service = None
         app.state.model_error = None
         app.state.research_reader = None
+        app.state.qa_retriever = None
         app.state.research_release = None
         app.state.research_reason = (
             "Recorded examples are available. Live inspection is not enabled."
@@ -90,6 +92,19 @@ def create_app(load_model_on_start: bool = True) -> FastAPI:
             except Exception as exc:  # Keep health endpoint available on failure.
                 app.state.model_error = str(exc)
                 logger.exception("model_load_failed")
+        qa_index = Path(os.getenv("DAIL_QA_INDEX", str(PROJECT_ROOT / "data" /
+                                                      "oireachtas" / "passages.sqlite")))
+        if os.getenv("DAIL_D1_DATABASES"):
+            from dail_llm.qa.index import D1Retriever
+
+            databases = {int(year): database_id for year, database_id in
+                         json.loads(os.environ["DAIL_D1_DATABASES"]).items()}
+            coverage = json.loads(os.environ["DAIL_QA_COVERAGE"])
+            app.state.qa_retriever = D1Retriever(databases, coverage)
+        elif qa_index.exists():
+            from dail_llm.qa.index import SQLiteRetriever
+
+            app.state.qa_retriever = SQLiteRetriever(qa_index)
         try:
             summary = json.loads((public_research / "summary.json").read_text(encoding="utf-8"))
             app.state.research_release = summary["release_id"]
@@ -119,6 +134,9 @@ def create_app(load_model_on_start: bool = True) -> FastAPI:
     )
     app.state.gate = InferenceGate(MAX_CONCURRENT_INFERENCE, MAX_QUEUED_INFERENCE)
     app.state.rate_limiter = RateLimiter(RATE_LIMIT_REQUESTS, RATE_LIMIT_WINDOW_SECONDS)
+    app.state.qa_daily_limiter = RateLimiter(
+        int(os.getenv("DAIL_QA_DAILY_REQUESTS", "100")), 24 * 60 * 60
+    )
 
     cors_origins = [
         origin.strip()
@@ -255,6 +273,39 @@ def create_app(load_model_on_start: bool = True) -> FastAPI:
             ),
             "policies": ["uniform", "speech_balanced", "context_diverse"],
         }
+
+    @app.get("/api/v1/qa/capabilities")
+    async def qa_capabilities(request: Request):
+        retriever = request.app.state.qa_retriever
+        return {"available": retriever is not None,
+                "generation_configured": bool(os.getenv("CLOUDFLARE_ACCOUNT_ID")
+                                              and os.getenv("CLOUDFLARE_API_TOKEN")),
+                "coverage": retriever.coverage() if retriever else None}
+
+    @app.post("/api/v1/qa/ask")
+    async def qa_ask(payload: QARequest, request: Request):
+        await enforce_rate_limit(request)
+        retriever = request.app.state.qa_retriever
+        if retriever is None:
+            raise HTTPException(503, "The current-debates index is unavailable.")
+        allowed, retry_after = await request.app.state.qa_daily_limiter.allow("qa-global")
+        if not allowed:
+            raise HTTPException(429, "Daily Q&A limit reached.",
+                                headers={"Retry-After": str(retry_after)})
+        from dail_llm.qa.answer import ask
+
+        try:
+            async with request.app.state.gate.slot():
+                return await anyio.to_thread.run_sync(
+                    ask, payload.question, retriever, payload.start_date, payload.end_date
+                )
+        except BusyError as exc:
+            raise HTTPException(429, str(exc), headers={"Retry-After": "3"}) from exc
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc
+        except (RuntimeError, OSError) as exc:
+            logger.warning("qa_backend_unavailable: %s", exc)
+            raise HTTPException(503, "Debate search is temporarily unavailable.") from exc
 
     @app.post("/api/v1/research/inspect")
     async def research_inspect(payload: ResearchInspectRequest, request: Request):

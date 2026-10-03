@@ -4,6 +4,8 @@ import type {
   GenerationResult,
   HealthStatus,
   ModelMetadata,
+  QACapabilities,
+  QAResult,
 } from "./types";
 
 export class ApiError extends Error {
@@ -39,6 +41,9 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  qaCapabilities: () => request<QACapabilities>("/api/v1/qa/capabilities"),
+  qaAsk: (payload: { question: string; start_date: string | null; end_date: string | null }) =>
+    request<QAResult>("/api/v1/qa/ask", { method: "POST", body: JSON.stringify(payload) }),
   health: () => request<HealthStatus>("/api/v1/health"),
   model: () => request<ModelMetadata>("/api/v1/model"),
   evaluation: () => request<EvaluationReport>("/api/v1/evaluation"),

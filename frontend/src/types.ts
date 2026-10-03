@@ -25,6 +25,32 @@ export interface DatasetManifest {
   };
 }
 
+export interface QASource {
+  passage_id: string;
+  date: string;
+  speaker: string;
+  title: string;
+  text: string;
+  source_url: string;
+  language: string | null;
+  party: string | null;
+}
+
+export interface QACapabilities {
+  available: boolean;
+  generation_configured: boolean;
+  coverage: { first_date: string | null; last_date: string | null; days: number; passages: number } | null;
+}
+
+export interface QAResult {
+  status: "answered" | "sources_only" | "insufficient_evidence";
+  answer: string | null;
+  sources: QASource[];
+  citation_ids: string[];
+  coverage: NonNullable<QACapabilities["coverage"]>;
+  prompt_version: string;
+}
+
 export interface ModelMetadata {
   name: string;
   checkpoint: { name: string; sha256: string };

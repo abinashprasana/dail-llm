@@ -2,7 +2,7 @@
   "schema_version": 1,
   "dataset": {
     "name": "Dáil Éireann Parliamentary Debates 1919-2013 (Harvard Dataverse)",
-    "citation": "Proksch, S.O. and Slapin, J.B. (2010). Database of Parliamentary Speeches in Ireland, 1919-2013. Harvard Dataverse.",
+    "citation": "Herzog, A. and Mikhaylov, S.J. (2017). Database of Parliamentary Speeches in Ireland, 1919-2013. Harvard Dataverse.",
     "doi": "https://doi.org/10.7910/DVN/6MZN76",
     "full_date_range": "1919-2013"
   },

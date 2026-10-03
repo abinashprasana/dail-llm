@@ -8,7 +8,7 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-From%20Scratch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org)
 [![Deployment](https://img.shields.io/badge/Deployment-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://dail-llm.vercel.app/)
 [![Perplexity](https://img.shields.io/badge/Perplexity-4.07-2ea44f?style=for-the-badge)](.)
-[![Status](https://img.shields.io/badge/Status-Completed-2ea44f?style=for-the-badge)](.)
+[![Status](https://img.shields.io/badge/Q%26A-Local%20Validation-bb8a45?style=for-the-badge)](.)
 
 <br/>
 
@@ -27,10 +27,26 @@
 | **Who it's for** | People learning how transformers work inside, and anyone reviewing this who wants to see the model rather than an API call. |
 | **Compared against** | A Witten–Bell character five-gram model, scored on the same held-out speeches. |
 | **What I found** | At this training budget the five-gram won: 1.86 bits per character against 3.54 for the best pilot transformer. Speech-memory selection didn't produce a clear gain either, since both confidence intervals cross zero. I've reported that rather than tune until something looked better. |
-| **What I built** | The model, a FastAPI service, a React lab where you can generate text and read the attention heads, and a Research page that replays recorded pilot results. |
-| **Where it runs** | [Live on Vercel](https://dail-llm.vercel.app/), locally with `docker compose up --build`, and checked by GitHub Actions CI on every push. |
+| **What I built** | The character model, FastAPI service, React Lab and Research page, plus a separate local Official Report Q&A implementation undergoing evaluation. |
+| **Where it runs** | The Lab and Research pages are [live on Vercel](https://dail-llm.vercel.app/). Q&A currently runs locally and has not passed public release gates. |
 
 The full numbers are in [the pilot results](docs/pilot-results.md).
+
+## Current-debate Q&A (local implementation)
+
+The new `/ask` interface uses separate [Official Report](https://www.oireachtas.ie/en/debates/) XML from 2014 onward. It shows retrieved speaker passages, their dates, and links to the source debate. The 1950 character model in the Lab does not answer these questions. The public Vercel deployment has **not** been enabled for current-debate Q&A: citation review, a held-out evaluation, free-tier sizing, credentials, and a deployed smoke test are still required. Until an answer model is configured, the local API returns sourced excerpts with `sources_only` status.
+
+To reproduce the local corpus and index:
+
+```powershell
+python -m pip install -e ".[qa]"
+python -m scripts.download_debates --start 2014-01-01
+python -m dail_llm.qa.index
+python -m pytest -q -m "not integration"
+python -m ruff check dail_llm tests scripts
+```
+
+The downloader caches XML and a SHA-256 manifest in ignored `data/oireachtas/`. Reruns skip unchanged records. Use `--refresh` with a narrower date range to compare source bytes even when the API update timestamp has not changed. The local index is `data/oireachtas/passages.sqlite`; set `DAIL_QA_INDEX` if it lives elsewhere. See [the repository audit](docs/AUDIT.md), [current corpus data card](docs/DATA_CARD.md), [evaluation status](eval/README.md), and [source research](docs/research.md). The Q&A flow uses LangChain retrieval interfaces and LangGraph. Langfuse tracing and LangSmith experiments require their own free-tier credentials; Terraform infrastructure has not been applied.
 
 ---
 

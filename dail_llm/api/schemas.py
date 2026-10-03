@@ -49,3 +49,9 @@ class ResearchInspectRequest(BaseModel):
     prefix: str = Field(min_length=1, max_length=256)
     policy: Literal["uniform", "speech_balanced", "context_diverse"] = "uniform"
     excluded_speech: str | None = Field(default=None, min_length=1, max_length=80)
+
+
+class QARequest(BaseModel):
+    question: str = Field(min_length=5, max_length=500)
+    start_date: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")
+    end_date: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")

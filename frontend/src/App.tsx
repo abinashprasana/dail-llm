@@ -5,6 +5,7 @@ import { HomePage } from "./pages/HomePage";
 const LabPage = lazy(() => import("./pages/LabPage").then(module => ({ default: module.LabPage })));
 
 const ResearchPage = lazy(() => import("./pages/ResearchPage"));
+const QAPage = lazy(() => import("./pages/QAPage"));
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/lab" element={<Suspense fallback={<main className="page-width" style={{ paddingTop: 150 }}><p role="status">Loading model lab…</p></main>}><LabPage /></Suspense>} />
         <Route path="/research" element={<Suspense fallback={<main className="page-width" style={{ paddingTop: 150 }}><p role="status">Loading Research…</p></main>}><ResearchPage /></Suspense>} />
+        <Route path="/ask" element={<Suspense fallback={<main className="page-width" style={{ paddingTop: 150 }}><p role="status">Loading debate search…</p></main>}><QAPage /></Suspense>} />
         <Route path="*" element={<HomePage />} />
       </Routes>
     </>

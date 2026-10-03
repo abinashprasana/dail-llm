@@ -55,6 +55,7 @@ export function SiteHeader() {
             <a key={link.label} href={link.href} onClick={() => setOpen(false)}>{link.label}</a>
           ))}
           <Link to="/research" aria-current={pathname === "/research" ? "page" : undefined} onClick={() => setOpen(false)}>Research</Link>
+          <Link to="/ask" aria-current={pathname === "/ask" ? "page" : undefined} onClick={() => setOpen(false)}>Ask the debates</Link>
           <Link
             className={`nav-lab ${pathname === "/lab" ? "is-active" : ""}`}
             to="/lab"

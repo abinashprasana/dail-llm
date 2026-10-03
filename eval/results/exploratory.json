@@ -1,0 +1,774 @@
+{
+  "generated_at": "2026-10-03T21:53:27.380397+00:00",
+  "question_count": 52,
+  "coverage": {
+    "first_date": "2014-01-15",
+    "last_date": "2026-10-01",
+    "days": 1298,
+    "passages": 496826
+  },
+  "summary": {
+    "baseline_recall_at_5": 1.0,
+    "graph_recall_at_5": 1.0,
+    "refusal_accuracy": 1.0,
+    "citation_id_validity": 1.0,
+    "baseline_latency_ms": 2934.3076923076924,
+    "graph_latency_ms": 1979.25
+  },
+  "results": [
+    {
+      "question": "On 2014-01-15, who said: “The difficulties facing the undocumented Irish have been aired often in this House through questions and at committee level. Will …”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2014-01-15:dbsect_10:spk_36"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 17307,
+      "graph_ms": 2843,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2014-04-30, who said: “After the Supreme Court made its ruling, the Minister stated publicly that he would consult the Attorney General on the matter. On…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2014-04-30:dbsect_8:spk_41"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1751,
+      "graph_ms": 1438,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2014-09-23, who said: “I had the opportunity during the summer to read the rural development plan submitted by the Minister to Brussels. I understand the…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2014-09-23:dbsect_7:spk_37"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1561,
+      "graph_ms": 1332,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 1 January 2014, who discussed the imaginary Zyxqv bill?",
+      "answerable": false,
+      "gold_passage_ids": [],
+      "baseline_recall_at_5": null,
+      "graph_recall_at_5": null,
+      "baseline_ms": 761,
+      "graph_ms": 1358,
+      "graph_status": "insufficient_evidence",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2015-01-14, who said: “The Minister's Department clearly has a considerable surplus of property in its portfolio, although some of it has been disposed o…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2015-01-14:dbsect_10:spk_35"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1531,
+      "graph_ms": 1324,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2015-04-22, who said: “The figures in respect of maths and literacy are encouraging. It is a tribute to the work being done in this area that all schools…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2015-04-22:dbsect_7:spk_24"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1498,
+      "graph_ms": 2097,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2015-09-23, who said: “The Minister said he is opposed to mandatory tendering but I hope we do not go down the road of tendering out. I accept the Minist…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2015-09-23:dbsect_5:spk_12"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 21530,
+      "graph_ms": 29401,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 1 January 2015, who discussed the imaginary Zyxqv bill?",
+      "answerable": false,
+      "gold_passage_ids": [],
+      "baseline_recall_at_5": null,
+      "graph_recall_at_5": null,
+      "baseline_ms": 783,
+      "graph_ms": 1337,
+      "graph_status": "insufficient_evidence",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2016-01-13, who said: “Deputy Coppinger spent a good deal of time referring to it but it does not apply. The Deputy is criticising what I believe is a go…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2016-01-13:dbsect_11:spk_100"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1603,
+      "graph_ms": 1419,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2016-06-21, who said: “On behalf of the Independent Alliance, I wish to offer my sympathy to Brendan and his two children on this horrific murder. When I…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2016-06-21:dbsect_5:spk_73"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1554,
+      "graph_ms": 1620,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2016-10-19, who said: “The position is that we are working through what is a difficult situation. Sligo County Council is an exception to virtually all o…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2016-10-19:dbsect_32:spk_324"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1726,
+      "graph_ms": 1404,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 1 January 2016, who discussed the imaginary Zyxqv bill?",
+      "answerable": false,
+      "gold_passage_ids": [],
+      "baseline_recall_at_5": null,
+      "graph_recall_at_5": null,
+      "baseline_ms": 717,
+      "graph_ms": 1427,
+      "graph_status": "insufficient_evidence",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2017-01-17, who said: “I discussed the Dublin-Monaghan bombings and other legacy cases with Prime Minister May when I met her in July and highlighted to …”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2017-01-17:dbsect_10:spk_148"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1677,
+      "graph_ms": 1375,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2017-04-06, who said: “Is the Minister fully aware of the infrastructural needs of the area, such as the substantial road and bridge realignments? The ar…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2017-04-06:dbsect_42:spk_285"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1673,
+      "graph_ms": 1595,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2017-09-26, who said: “Perhaps the Deputy will let me finish. The Deputy is also asking the question, I presume, in the context of legislation that he an…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2017-09-26:dbsect_24:spk_256"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 35210,
+      "graph_ms": 1413,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 1 January 2017, who discussed the imaginary Zyxqv bill?",
+      "answerable": false,
+      "gold_passage_ids": [],
+      "baseline_recall_at_5": null,
+      "graph_recall_at_5": null,
+      "baseline_ms": 772,
+      "graph_ms": 1606,
+      "graph_status": "insufficient_evidence",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2018-01-16, who said: “No. For every single European Council debate, the Taoiseach stays until the Labour Party, with its seven Members, speaks, as he ri…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2018-01-16:dbsect_10:spk_244"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1552,
+      "graph_ms": 1271,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2018-05-09, who said: “Tá mé ag iarraidh a fháil amach ón Aire Stáit cé mhéad atá le chaitheamh ar aeriompar chuig na hoileáin. Caithfear tabhairt san ái…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2018-05-09:dbsect_20:spk_275"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 147,
+      "graph_ms": 104,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2018-09-26, who said: “I do not say that the current system is perfect. I listened to examples given by Deputies from around the country. Deputy Mattie M…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2018-09-26:dbsect_27:spk_381"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1789,
+      "graph_ms": 1433,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 1 January 2018, who discussed the imaginary Zyxqv bill?",
+      "answerable": false,
+      "gold_passage_ids": [],
+      "baseline_recall_at_5": null,
+      "graph_recall_at_5": null,
+      "baseline_ms": 665,
+      "graph_ms": 1354,
+      "graph_status": "insufficient_evidence",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2019-01-15, who said: “Seanad Éireann has passed the Central Bank (National Claims Information Database) Bill 2018, without amendment. It has also passed…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2019-01-15:dbsect_10:spk_257"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1459,
+      "graph_ms": 1302,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2019-04-11, who said: “Naval vessels do not return to Haulbowline every evening and set off again the next morning. I recognise that life at sea is diffi…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2019-04-11:dbsect_9:spk_45"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1648,
+      "graph_ms": 1328,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2019-09-25, who said: “The Deputy and I have a different view, and that is fine. I will cite research that was not commissioned by us but undertaken by t…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2019-09-25:dbsect_11:spk_69"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1527,
+      "graph_ms": 1454,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 1 January 2019, who discussed the imaginary Zyxqv bill?",
+      "answerable": false,
+      "gold_passage_ids": [],
+      "baseline_recall_at_5": null,
+      "graph_recall_at_5": null,
+      "baseline_ms": 668,
+      "graph_ms": 1348,
+      "graph_status": "insufficient_evidence",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2020-02-20, who said: “Sin deireadh leis an díospóireacht thábhachtach sin mar gheall ar cheapacháin an Taoisigh. Tá sé suntasach tabhairt faoi deara gur…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2020-02-20:dbsect_10:spk_101"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 329,
+      "graph_ms": 358,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2020-06-30, who said: “I will be very quick. The €6 million for Shannon Airport was approved by Cabinet last week. It is mainly for infrastructure works.…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2020-06-30:dbsect_5:spk_73"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1731,
+      "graph_ms": 1559,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2020-10-14, who said: “I prefer to avail of the 30 seconds to ask a question. I pointed out earlier how the lack of access to speech therapists is having…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2020-10-14:dbsect_16:spk_70"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1423,
+      "graph_ms": 1296,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 1 January 2020, who discussed the imaginary Zyxqv bill?",
+      "answerable": false,
+      "gold_passage_ids": [],
+      "baseline_recall_at_5": null,
+      "graph_recall_at_5": null,
+      "baseline_ms": 663,
+      "graph_ms": 1373,
+      "graph_status": "insufficient_evidence",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2021-01-13, who said: “I pay particular tribute to Ms Corless, Joan Burton, my friends, Rosie and Mags McKinney, for sharing their story - I know they ar…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2021-01-13:dbsect_10:spk_95"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1341,
+      "graph_ms": 1435,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2021-05-18, who said: “What I can tell the Deputy is that, regardless of any formal invoking of contracts, the private healthcare sector is working with …”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2021-05-18:dbsect_15:spk_352"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1732,
+      "graph_ms": 1472,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2021-09-29, who said: “I acknowledge and reiterate that this issue is very high on the agenda of the Minister. We do talk about it and she is aware of th…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2021-09-29:dbsect_6:spk_25"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1767,
+      "graph_ms": 1505,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 1 January 2021, who discussed the imaginary Zyxqv bill?",
+      "answerable": false,
+      "gold_passage_ids": [],
+      "baseline_recall_at_5": null,
+      "graph_recall_at_5": null,
+      "baseline_ms": 730,
+      "graph_ms": 1570,
+      "graph_status": "insufficient_evidence",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2022-01-19, who said: “Rachaimid ar aghaidh go dtí an chéad phíosa gnó eile, is é sin ráitis maidir le foréigean ar bhonn inscne. Tá 145 nóiméad againn d…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2022-01-19:dbsect_11:spk_152"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 634,
+      "graph_ms": 563,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2022-05-05, who said: “The letter I have states that children with complex special needs feel abandoned. They are absolutely at their wits' end. The take…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2022-05-05:dbsect_36:spk_393"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1735,
+      "graph_ms": 1429,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2022-09-27, who said: “This Government has prioritised special education. The last three budgets have delivered more than 3,300 additional special needs …”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2022-09-27:dbsect_3:spk_15"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1404,
+      "graph_ms": 1509,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 1 January 2022, who discussed the imaginary Zyxqv bill?",
+      "answerable": false,
+      "gold_passage_ids": [],
+      "baseline_recall_at_5": null,
+      "graph_recall_at_5": null,
+      "baseline_ms": 737,
+      "graph_ms": 1435,
+      "graph_status": "insufficient_evidence",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2023-01-18, who said: “I move: That the proposal that Dáil Éireann approves the following Convention on Biological Diversity Protocol: Nagoya Protocol on…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2023-01-18:dbsect_10:spk_196"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1394,
+      "graph_ms": 1337,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2023-04-20, who said: “I know the Deputy is asking this question on behalf of her party colleague but I do not agree the status is unclear. It is crystal…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2023-04-20:dbsect_10:spk_44"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1540,
+      "graph_ms": 1471,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2023-09-21, who said: “I agree. As it is a sensitive moment with regard to that public private partnership, PPP, bundle, I will be limited in what I will…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2023-09-21:dbsect_25:spk_144"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1619,
+      "graph_ms": 1437,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 1 January 2023, who discussed the imaginary Zyxqv bill?",
+      "answerable": false,
+      "gold_passage_ids": [],
+      "baseline_recall_at_5": null,
+      "graph_recall_at_5": null,
+      "baseline_ms": 709,
+      "graph_ms": 1541,
+      "graph_status": "insufficient_evidence",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2024-01-17, who said: “For the information of the House, a typographical error has been noted in the Schedule to the Thirty-ninth Amendment of the Consti…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2024-01-17:dbsect_11:spk_194"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1168,
+      "graph_ms": 1093,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2024-04-24, who said: “I move amendment No. 25: In page 38, between lines 8 and 9, to insert the following: “Authority subject to Freedom of Information …”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2024-04-24:dbsect_16:spk_316"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1482,
+      "graph_ms": 1289,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2024-06-26, who said: “We are fortunate in this State that our Government operates with Cabinet and with collective responsibility. In neighbouring juris…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2024-06-26:dbsect_16:spk_184"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1530,
+      "graph_ms": 1675,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 1 January 2024, who discussed the imaginary Zyxqv bill?",
+      "answerable": false,
+      "gold_passage_ids": [],
+      "baseline_recall_at_5": null,
+      "graph_recall_at_5": null,
+      "baseline_ms": 1680,
+      "graph_ms": 3794,
+      "graph_status": "insufficient_evidence",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2025-01-23, who said: “-----to set back the goal of ceasing trading with companies that profit from the dispossession, the apartheid and the brutal dehum…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2025-01-23:dbsect_13:spk_103"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 15946,
+      "graph_ms": 1277,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2025-05-13, who said: “I thank the Taoiseach for the update on the NESC. As he is aware, NESC has identified modern methods of construction as a key to r…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2025-05-13:dbsect_8:spk_181"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 2071,
+      "graph_ms": 1402,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2025-09-25, who said: “We have known for months that at least one in five parents skip meals or reduce their own portions to ensure their children have e…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2025-09-25:dbsect_20:spk_101"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1747,
+      "graph_ms": 1375,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 1 January 2025, who discussed the imaginary Zyxqv bill?",
+      "answerable": false,
+      "gold_passage_ids": [],
+      "baseline_recall_at_5": null,
+      "graph_recall_at_5": null,
+      "baseline_ms": 664,
+      "graph_ms": 1318,
+      "graph_status": "insufficient_evidence",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2026-01-13, who said: “Sinn Féin has been clear and consistent for years in opposing the EU–Mercosur trade deal. It is bad for Irish agriculture. Farmers…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2026-01-13:dbsect_14:spk_261"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1702,
+      "graph_ms": 1556,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2026-03-04, who said: “At the heart of this is a human tragedy. The response to a recent parliamentary question I submitted showed that in the last five …”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2026-03-04:dbsect_19:spk_315"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1996,
+      "graph_ms": 1472,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 2026-05-27, who said: “Gabhaim buíochas leis an Teachta. Rachaidh na coistí réigiúnacha i gcomhairle le grúpa pleanála teanga sa limistéar faoi leith ina…”?",
+      "answerable": true,
+      "gold_passage_ids": [
+        "dail:2026-05-27:dbsect_22:spk_342"
+      ],
+      "baseline_recall_at_5": 1.0,
+      "graph_recall_at_5": 1.0,
+      "baseline_ms": 1325,
+      "graph_ms": 1257,
+      "graph_status": "sources_only",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    },
+    {
+      "question": "On 1 January 2026, who discussed the imaginary Zyxqv bill?",
+      "answerable": false,
+      "gold_passage_ids": [],
+      "baseline_recall_at_5": null,
+      "graph_recall_at_5": null,
+      "baseline_ms": 676,
+      "graph_ms": 1540,
+      "graph_status": "insufficient_evidence",
+      "refusal_correct": true,
+      "citation_ids_valid": true,
+      "claim_support_reviewed": false
+    }
+  ]
+}

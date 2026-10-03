@@ -94,3 +94,15 @@ Run `python -m pytest` for the scientific and compatibility tests. The synthetic
 The separate `research.verify` command checks a completed real run. It checks every retained speech's target positions, partition ownership, memory eligibility, equal memory sizes, and checkpoint selection. It independently recomputes sampled speech losses in float64 and compares sampled retrieval distances with brute force. Results and input hashes are written to `verification.json`. This numerical audit does not certify the source metadata or replace the blinded human review.
 
 Local API adversarial tests also exercise bounds, path traversal, CORS, rate limits, and restricted checkpoint loading. Rate limiting uses the client address supplied by the ASGI server. A reverse-proxy deployment must configure the server's trusted proxy addresses; raw forwarded headers are not accepted directly as client identities.
+
+---
+
+# Sources used for the Q&A design
+
+- [Houses of the Oireachtas debates](https://www.oireachtas.ie/en/debates/): the Official Report is the authoritative record. Debate text is available in structured Akoma Ntoso XML, so citation links point back to this source.
+- [Oireachtas debates API listing](https://data.gov.ie/dataset/d9ddc7ee-d497-41bb-924f-3557cfa12037/resource/c3af5188-ac73-46c4-89de-7863c0611681) and [open-data licence](https://www.oireachtas.ie/en/open-data/license/): the API yields current records and XML URLs; reuse requires attribution and the licence reference. The downloader caches and paces requests.
+- [Herzog and Mikhaylov's archive description](https://arxiv.org/abs/1708.04557) and [Harvard Dataverse DOI](https://doi.org/10.7910/DVN/6MZN76): these identify the historical 1919–2013 source. New official XML is a separate corpus and does not silently replace the original model's training data.
+- [Self-RAG](https://arxiv.org/abs/2310.11511) and [Corrective RAG](https://arxiv.org/abs/2401.15884): both motivate checking retrieval before answering. This project uses a bounded retry and refusal; it does not claim to reproduce their training methods or web-search extensions.
+- [Fine-grained citation evaluation](https://aclanthology.org/2024.inlg-main.35/): a valid source ID does not establish that a passage supports a claim. The application checks IDs mechanically and reserves support judgements for reviewed evaluation cases.
+- [Langfuse's LangGraph integration](https://langfuse.com/integrations/frameworks/langgraph) and [LangSmith evaluation guidance](https://docs.langchain.com/langsmith/evaluation-types): the former informs optional runtime traces; the latter informs an offline, named experiment. Cloud credentials are needed before either can produce remote proof.
+- [Cloudflare D1 limits](https://developers.cloudflare.com/d1/platform/limits/), [Workers AI pricing](https://developers.cloudflare.com/workers-ai/platform/pricing/), and [Vercel function limits](https://vercel.com/docs/functions/limitations): a free D1 database is capped at 500 MB, requiring measured year shards if used. Workers AI stops when its free daily allocation is exhausted. Public deployment is contingent on real size and usage checks.

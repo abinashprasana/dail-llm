@@ -12,6 +12,10 @@ frontend/test-results/
 .pytest_cache/
 .ruff_cache/
 .env
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/crash.log
 *.log
 .claude/
 *.egg-info/

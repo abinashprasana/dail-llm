@@ -40,6 +40,12 @@ research = [
     "scikit-learn>=1.6,<2",
     "tqdm>=4.67,<5",
 ]
+qa = [
+    "langchain-core==1.6.6",
+    "langgraph==1.2.12",
+    "langfuse==4.16.0",
+    "langsmith==0.14.4",
+]
 
 [project.scripts]
 dail-api = "dail_llm.api.app:run"
