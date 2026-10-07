@@ -9,7 +9,15 @@
 [![Vercel](https://img.shields.io/badge/Site-Vercel-111827?style=for-the-badge&logo=vercel&logoColor=white)](https://dail-llm.vercel.app/)
 [![Q&A status](https://img.shields.io/badge/Public%20Q%26A-Release%20gated-9B792C?style=for-the-badge)](#public-qa-status)
 
-[**Open the site ↗**](https://dail-llm.vercel.app/) · [**Run locally**](#run-the-application) · [**See results**](#results-and-limits)
+<br/>
+
+[![LangChain retrieval](https://img.shields.io/badge/LangChain-Retrieval-1F4D3B?style=flat-square)](#qa-tooling)
+[![LangGraph flow](https://img.shields.io/badge/LangGraph-Q%26A%20flow-1F4D3B?style=flat-square)](#qa-tooling)
+[![Langfuse tracing](https://img.shields.io/badge/Langfuse-Wired-9B792C?style=flat-square)](#qa-tooling)
+[![LangSmith experiments](https://img.shields.io/badge/LangSmith-Pending-9B792C?style=flat-square)](#qa-tooling)
+[![Terraform plan](https://img.shields.io/badge/Terraform-Plan%20only-5B6470?style=flat-square&logo=terraform&logoColor=white)](#qa-tooling)
+
+[**Open the site ↗**](https://dail-llm.vercel.app/) · [**Run locally**](#run-the-application) · [**See results**](#results-and-limits) · [**Tool status**](#qa-tooling)
 
 </div>
 
@@ -223,6 +231,20 @@ dail_llm/
 ```
 
 Raw downloads, generated indices, and research run directories are ignored by Git. The recorded Research examples are checked in so that page remains inspectable without a live research service. [Research interface guide](docs/research-ui.md) · [UI design specification](docs/UI_DESIGN_SPEC.md).
+
+<a id="qa-tooling"></a>
+
+## 🧩 Tools behind Q&A
+
+| Tool | What it does here | Status |
+| --- | --- | --- |
+| **LangChain** | Wraps retrieved passages as documents through a retriever interface in the [Q&A flow](dail_llm/qa/answer.py). | Used by local Q&A. |
+| **LangGraph** | Runs retrieval, one retry, evidence checking, and answer or refusal in the [same flow](dail_llm/qa/answer.py). | Used by local Q&A. |
+| **Langfuse** | Has callbacks and a prompt version wired into that flow. | No cloud trace recorded; credentials are still needed. |
+| **LangSmith** | Has a [named evaluation path](scripts/evaluate_qa.py) that requires independently reviewed questions. | No experiment run yet. |
+| **Terraform** | Describes proposed free-tier D1 resources in [`infra/`](infra/README.md). | Formatted, validated, and planned offline; never applied. |
+
+These tools belong to the debate Q&A path. The character model in Model Lab runs separately. See [Q&A evaluation status](eval/README.md) and [infrastructure measurements](infra/README.md) for the remaining release work.
 
 ## 🔌 API and checks
 
