@@ -20,7 +20,7 @@ from dail_llm.qa.corpus import parse_debate
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = "https://api.oireachtas.ie/v1/debates"
-USER_AGENT = "DailLLMResearch/1.0 (public portfolio; polite cached retrieval)"
+USER_AGENT = "DailLLMResearch/1.0 (cached public retrieval)"
 
 
 def fetch(url: str, attempts: int = 3) -> bytes:
