@@ -35,7 +35,7 @@ test.beforeEach(async ({ page }) => {
 
 test("home has no horizontal overflow", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: /Debate, modeled/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Explore parliamentary language/i })).toBeVisible();
   const dimensions = await page.evaluate(() => ({ width: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
   expect(dimensions.scroll).toBeLessThanOrEqual(dimensions.width + 1);
 });
@@ -47,7 +47,7 @@ test("compact navigation reaches the model lab", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Open navigation" }).click();
   const navigation = page.getByRole("navigation", { name: "Primary navigation" });
-  const labLink = navigation.getByRole("link", { name: "Open model lab" });
+  const labLink = navigation.getByRole("link", { name: "Model Lab" });
   await expect(labLink).toBeVisible();
   await Promise.all([
     page.waitForURL("**/lab"),
@@ -104,8 +104,8 @@ test("mobile presents the argument and primary action before the chamber", async
   test.skip((page.viewportSize()?.width ?? 9999) > 480, "Phone hero order");
   await openReducedMotionHome(page);
 
-  const heading = page.getByRole("heading", { name: /Parliamentary debate, modeled character by character/i });
-  const primaryAction = page.getByRole("link", { name: /Open model lab/i }).first();
+  const heading = page.getByRole("heading", { name: /Explore parliamentary language/i });
+  const primaryAction = page.locator(".hero-actions").getByRole("link", { name: /Ask the debates/i });
   const scene = page.locator(".hero-scene");
   await expect(heading).toBeVisible();
   await expect(primaryAction).toBeVisible();

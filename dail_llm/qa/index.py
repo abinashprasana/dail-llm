@@ -8,10 +8,32 @@ import os
 import sqlite3
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
+from datetime import date
 from pathlib import Path
 from typing import Protocol
 
 from .corpus import Passage, parse_debate, query_terms
+
+MONTH_NAMES = {"january", "february", "march", "april", "may", "june", "july",
+               "august", "september", "october", "november", "december"}
+
+
+def match_queries(terms: list[str], start: str | None, end: str | None) -> list[str]:
+    """Try a selective match first for a short date window, then retain OR recall."""
+    def quoted(values: list[str], join: str) -> str:
+        return join.join('"' + term.replace('"', '') + '"' for term in values)
+    broad = quoted(terms, " OR ")
+    if not start or not end:
+        return [broad]
+    try:
+        short_window = 0 <= (date.fromisoformat(end) - date.fromisoformat(start)).days <= 7
+    except ValueError:
+        return [broad]
+    topics = [term for term in terms if not term.isdigit() and term not in MONTH_NAMES]
+    if not short_window or len(topics) < 2:
+        return [broad]
+    selective = quoted(topics[:2], " AND ")
+    return [selective, broad] if selective != broad else [broad]
 
 
 def connect(path: Path) -> sqlite3.Connection:
@@ -91,15 +113,18 @@ class SQLiteRetriever:
         terms = query_terms(query)
         if not terms or not self.path.exists():
             return []
-        match = " OR ".join('"' + term.replace('"', '') + '"' for term in terms)
         db = connect(self.path)
         try:
-            rows = db.execute("""
-                SELECT p.* FROM passage_fts f JOIN passages p ON p.passage_id=f.passage_id
-                WHERE passage_fts MATCH ? AND (? IS NULL OR p.date>=?)
-                  AND (? IS NULL OR p.date<=?)
-                ORDER BY bm25(passage_fts, 0, 1, 2, 0.5) LIMIT ?
-            """, (match, start, start, end, end, limit)).fetchall()
+            rows = []
+            for match in match_queries(terms, start, end):
+                rows = db.execute("""
+                    SELECT p.* FROM passage_fts f JOIN passages p ON p.passage_id=f.passage_id
+                    WHERE passage_fts MATCH ? AND (? IS NULL OR p.date>=?)
+                      AND (? IS NULL OR p.date<=?)
+                    ORDER BY bm25(passage_fts, 0, 1, 2, 0.5) LIMIT ?
+                """, (match, start, start, end, end, limit)).fetchall()
+                if rows:
+                    break
             return [Passage(**dict(row)) for row in rows]
         finally:
             db.close()
@@ -145,16 +170,24 @@ class D1Retriever:
         years = [year for year in self.databases
                  if (not start or year >= int(start[:4])) and
                  (not end or year <= int(end[:4]))]
-        match = " OR ".join('"' + term.replace('"', '') + '"' for term in terms)
+        # Adjacent years can share one free-tier D1 database. Query each
+        # database once, then apply the exact date filter in SQL.
+        database_ids = list(dict.fromkeys(self.databases[year] for year in sorted(years)))
         sql = ("SELECT p.*, bm25(passage_fts, 0, 1, 2, 0.5) score "
                "FROM passage_fts f JOIN passages p ON p.passage_id=f.passage_id "
                "WHERE passage_fts MATCH ? AND (? IS NULL OR p.date>=?) "
                "AND (? IS NULL OR p.date<=?) ORDER BY score LIMIT ?")
-        params = [match, start, start, end, end, limit]
-        with ThreadPoolExecutor(max_workers=4) as pool:
-            batches = list(pool.map(lambda year: self._query(self.databases[year], sql, params),
-                                    sorted(years)))
-        rows = sorted((row for batch in batches for row in batch), key=lambda row: row["score"])
+        rows = []
+        for match in match_queries(terms, start, end):
+            params = [match, start, start, end, end, limit]
+            with ThreadPoolExecutor(max_workers=4) as pool:
+                batches = list(pool.map(lambda database_id, params=params:
+                                        self._query(database_id, sql, params),
+                                        database_ids))
+            rows = sorted((row for batch in batches for row in batch),
+                          key=lambda row: row["score"])
+            if rows:
+                break
         return [Passage(**{key: row[key] for key in Passage.__dataclass_fields__})
                 for row in rows[:limit]]
 

@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpen, Cpu, Database, Fingerprint, FlaskConical } from "lucide-react";
+import { ArrowRight, BookOpen, Cpu, Database, Fingerprint, FlaskConical, Search } from "lucide-react";
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import { ArchiveStamp } from "../components/ArchiveStamp";
 import { HeroScene } from "../components/HeroScene";
 import { MetricCard } from "../components/MetricCard";
 import { SiteHeader } from "../components/SiteHeader";
+import { SiteFooter } from "../components/SiteFooter";
 import { formatCompactNumber, formatMetric } from "../format";
 import type { EvaluationReport, ModelMetadata } from "../types";
 import published from "../published-evaluation.json";
@@ -76,16 +77,17 @@ export function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={reducedMotion ? { duration: 0.18 } : undefined}
             >
-              <h1>Parliamentary debate, <em>modeled character by character</em></h1>
+              <div className="eyebrow"><span /> Dáil LLM · Irish parliamentary record</div>
+              <h1>Explore <em>parliamentary language</em></h1>
               <p className="hero-lede">
-                A {formatCompactNumber(architecture.parameters)}-parameter transformer trained on Dáil Éireann debates.
-                Generate text, inspect attention, and explore studies of speech memory and historical change.
+                Search sourced debates, examine a character model, and read the research behind it.
+                Each path offers a different view of the Dáil record.
               </p>
               <div className="hero-actions">
-                <Link className="button button-primary" to="/lab">
-                  Open model lab <ArrowRight size={17} />
+                <Link className="button button-primary" to="/ask">
+                  Ask the debates <ArrowRight size={17} />
                 </Link>
-                <a className="button button-quiet" href="#model">Read the model notes</a>
+                <a className="button button-quiet" href="#explore">Explore the project</a>
               </div>
               {modelError && evaluationError && (
                 <p className="service-note">Live model and evaluation data are unavailable. The figures below are the last published record.</p>
@@ -96,10 +98,7 @@ export function HomePage() {
               {evaluationError && !modelError && (
                 <p className="service-note">Live evaluation is unavailable. Evidence below uses the saved published record.</p>
               )}
-              <p className="hero-provenance">
-                <a href="#evidence">Verified checkpoint</a>
-                <a href="#data">Dáil Éireann debates, {dateRange}</a>
-              </p>
+              <p className="hero-provenance">The chamber traces the <a href="#model">character model</a> trained on debates from {dateRange}.</p>
             </motion.div>
             <HeroScene />
           </div>
@@ -110,10 +109,22 @@ export function HomePage() {
           </div>
         </section>
 
+        <section className="explore-section page-width" id="explore" aria-labelledby="explore-heading">
+          <div className="explore-heading">
+            <div className="eyebrow"><span /> Three ways in</div>
+            <h2 id="explore-heading">Follow the question that interests you</h2>
+          </div>
+          <div className="explore-paths">
+            <Link to="/ask" className="explore-path"><span className="explore-path-icon"><Search size={21} /></span><span><strong>Ask the debates</strong><small>Find passages in the Official Report, with dates, speakers, and source links. Availability depends on the connected index.</small></span><ArrowRight size={20} aria-hidden="true" /></Link>
+            <Link to="/lab" className="explore-path"><span className="explore-path-icon"><Cpu size={21} /></span><span><strong>Model Lab</strong><small>Prompt the 1950 character model and inspect its predictions and measured results.</small></span><ArrowRight size={20} aria-hidden="true" /></Link>
+            <Link to="/research" className="explore-path"><span className="explore-path-icon"><FlaskConical size={21} /></span><span><strong>Research</strong><small>Explore separate experiments on speech memory and historical change.</small></span><ArrowRight size={20} aria-hidden="true" /></Link>
+          </div>
+        </section>
+
         <section className="position-statement page-width" aria-label="Research position">
           <div className="statement-mark">D</div>
           <p>
-            I built every part of this model myself to see how language models work. The most useful finding so far: a simple five-gram model still beats it at this scale.
+            The Lab shows the 1950 character model. The separate Research pilot tests speech memory and historical change, with its baselines and limits shown beside the results.
           </p>
         </section>
 
@@ -216,19 +227,15 @@ export function HomePage() {
               <div><FlaskConical size={19} /><span>Review evidence</span></div>
               <div><Database size={19} /><span>Trace the dataset</span></div>
             </div>
-            <Link className="button button-parchment" to="/lab">Enter the model lab <ArrowRight size={17} /></Link>
-            <Link className="text-link invitation-research" to="/research">Explore the research <ArrowRight size={16} /></Link>
+            <div className="invitation-actions">
+              <Link className="button button-parchment" to="/lab">Enter the model lab <ArrowRight size={17} /></Link>
+              <Link className="text-link invitation-research" to="/research">Explore the research <ArrowRight size={16} /></Link>
+            </div>
           </div>
         </section>
       </main>
 
-      <footer className="site-footer">
-        <div className="page-width footer-grid">
-          <div><span className="footer-name">Dáil LLM</span><p>Irish parliamentary language, modeled one character at a time.</p></div>
-          <p>Dataset: Alexander Herzog and Slava J. Mikhaylov (2017), Harvard Dataverse.</p>
-          <a href="https://doi.org/10.7910/DVN/6MZN76" target="_blank" rel="noreferrer">DOI 10.7910/DVN/6MZN76</a>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

@@ -31,8 +31,9 @@ beforeEach(() => {
 describe("Dáil LLM application", () => {
   it("renders the product home and primary action", async () => {
     renderRoute("/");
-    expect(screen.getByRole("heading", { name: /Debate, modeled/i })).toBeInTheDocument();
-    expect(screen.getAllByRole("link", { name: /Open model lab/i })[0]).toHaveAttribute("href", "/lab");
+    expect(screen.getByRole("heading", { name: /Explore parliamentary language/i })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "Model Lab" })[0]).toHaveAttribute("href", "/lab");
+    expect(screen.getAllByRole("link", { name: "Research" })[0]).toHaveAttribute("href", "/research");
   });
 
   it("switches model lab panels with accessible tabs", async () => {
@@ -47,7 +48,7 @@ describe("Dáil LLM application", () => {
   it("validates an empty generation prompt", async () => {
     renderRoute("/lab");
     await screen.findByRole("tab", { name: "Generate" });
-    fireEvent.change(screen.getByLabelText(/Seed prompt/i), { target: { value: "" } });
+    fireEvent.change(screen.getByLabelText(/Starting text/i), { target: { value: "" } });
     fireEvent.click(screen.getByRole("button", { name: /Generate text/i }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Enter a prompt");
   });

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 
 test("current-debate excerpts retain source links and coverage", async ({ page }) => {
   await page.route("**/api/v1/qa/capabilities", route => route.fulfill({ json: {
@@ -13,11 +14,12 @@ test("current-debate excerpts retain source links and coverage", async ({ page }
       source_url: "https://www.oireachtas.ie/en/debates/debate/dail/2026-10-01/" }],
   } }));
   await page.goto("/ask");
-  await expect(page.getByText(/passages from 2014-01-15 to 2026-10-01/)).toBeVisible();
+  await expect(page.getByText(/passages from 15 Jan 2014 to 1 Oct 2026/)).toBeVisible();
   await page.getByLabel("Your question").fill("What was said about housing?");
   await page.getByRole("button", { name: "Search debates" }).click();
   await expect(page.getByRole("heading", { name: "Relevant passages" })).toBeVisible();
   await expect(page.getByRole("link", { name: /Read the Official Report/ })).toHaveAttribute(
     "href", "https://www.oireachtas.ie/en/debates/debate/dail/2026-10-01/",
   );
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });

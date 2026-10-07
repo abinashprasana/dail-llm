@@ -1,0 +1,45 @@
+{
+  "checked_at_utc": "2026-10-05",
+  "database": {
+    "name": "dail-debates-2022-2023",
+    "uuid": "ec1bb53b-f607-4c81-8294-9683f4d8800d",
+    "jurisdiction": "eu",
+    "region_reported": "EEUR",
+    "file_size_bytes": 188416
+  },
+  "sample": {
+    "passages": 30,
+    "fts_rows": 30,
+    "first_ten": "Five short passages from 2022-01-19 and five from 2023-01-18",
+    "next_twenty": "Ten random passages per year, seeded with 20261005, restricted to 300-4000 characters",
+    "source": "data/oireachtas/2022-2023.sqlite",
+    "sample_only": true
+  },
+  "checks": {
+    "bad_official_report_url_patterns": 0,
+    "unicode_replacement_characters": 0,
+    "irish_fada_readback": true,
+    "irish_fts_match": "Stáit",
+    "english_fts_match": "teachers",
+    "date_filtered_ranked_query": {
+      "query": "climate",
+      "start_date": "2023-01-01",
+      "end_date": "2023-12-31",
+      "returned_passages": 3,
+      "rows_read": 9,
+      "rows_written": 0,
+      "sql_duration_ms": 1.1254
+    }
+  },
+  "observed_rows_written_during_pilot": 176,
+  "local_shard": {
+    "passages": 76815,
+    "characters": 97609495,
+    "sqlite_file_bytes": 326537216
+  },
+  "limitations": [
+    "The sample is too small and selective to prove full-shard D1 storage fit.",
+    "SQL duration excludes network, API, retrieval flow, and generation latency.",
+    "No public Q&A deployment or manual citation-support review was performed."
+  ]
+}

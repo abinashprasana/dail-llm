@@ -15,8 +15,10 @@ import { Link } from "react-router-dom";
 import { api } from "../api";
 import { AttentionCanvas } from "../components/AttentionCanvas";
 import { SiteHeader } from "../components/SiteHeader";
+import { SiteFooter } from "../components/SiteFooter";
 import { formatMetric } from "../format";
 import type { AttentionResult, EvaluationReport, GenerationResult, HealthStatus, ModelMetadata } from "../types";
+import "../lab.css";
 
 type LabTab = "generate" | "evaluation" | "attention";
 
@@ -161,7 +163,7 @@ function GenerationPanel() {
         <h2>Continue a parliamentary prompt</h2>
         <p>The model predicts one character at a time from the preceding context.</p>
 
-        <label className="field-label" htmlFor="seed-prompt">Seed prompt <span>{prompt.length}/256</span></label>
+        <label className="field-label" htmlFor="seed-prompt">Starting text <span>{prompt.length}/256 characters</span></label>
         <textarea id="seed-prompt" value={prompt} maxLength={256} onChange={(event) => setPrompt(event.target.value)} rows={5} />
         <div className="prompt-chips" aria-label="Suggested prompts">
           {promptOptions.map((option) => (
@@ -170,14 +172,14 @@ function GenerationPanel() {
         </div>
 
         <div className="range-field">
-          <label htmlFor="token-count">New characters <strong>{tokens}</strong></label>
+          <label htmlFor="token-count">Length of generated text <strong>{tokens} characters</strong></label>
           <input id="token-count" type="range" min="50" max="500" step="25" value={tokens} onChange={(event) => setTokens(Number(event.target.value))} />
           <div><span>50</span><span>500</span></div>
         </div>
         <div className="range-field">
-          <label htmlFor="temperature">Temperature <strong>{temperature.toFixed(2)}</strong></label>
+          <label htmlFor="temperature">Variation <strong>{temperature.toFixed(2)}</strong></label>
           <input id="temperature" type="range" min="0.5" max="1.5" step="0.05" value={temperature} onChange={(event) => setTemperature(Number(event.target.value))} />
-          <div><span>Precise</span><span>Variable</span></div>
+          <div><span>More predictable</span><span>More varied</span></div>
         </div>
         {error && <PanelError message={error} />}
         <button className="button button-primary run-button" type="submit" disabled={loading}>
@@ -196,7 +198,7 @@ function GenerationPanel() {
           {announcement}
         </p>
         <div className="output-header">
-          <div><span>Model output</span>{result && <small>{result.generated_characters} characters · {(result.elapsed_ms / 1000).toFixed(1)}s</small>}</div>
+          <div><span>Generated model text</span>{result && <small>{result.generated_characters} characters · {(result.elapsed_ms / 1000).toFixed(1)}s</small>}</div>
           <button type="button" onClick={copyOutput} disabled={!result || !revealComplete} aria-label="Copy generated text">
             {copied ? <Check size={17} /> : <Clipboard size={17} />} {copied ? "Copied" : "Copy"}
           </button>
@@ -352,7 +354,7 @@ export function LabPage() {
           <div>
             <div className="eyebrow"><span /> Live model workspace</div>
             <h1>Model lab</h1>
-            <p>Generate text, inspect held-out evidence, and read causal attention from the active checkpoint.</p>
+            <p>Continue a prompt with the 1950 character model, inspect its measured results, and see which earlier characters it attends to. Generated text is an experiment, not a record of what was said.</p>
             <Link className="text-link lab-research-link" to="/research">Separate studies of memory and historical change <ChevronRight size={15} /></Link>
           </div>
           <div
@@ -411,6 +413,7 @@ export function LabPage() {
           </AnimatePresence>
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

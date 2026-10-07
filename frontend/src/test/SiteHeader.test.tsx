@@ -29,7 +29,7 @@ describe("SiteHeader", () => {
     fireEvent.click(menu);
     expect(menu).toHaveAttribute("aria-expanded", "true");
 
-    screen.getByRole("link", { name: "Model" }).focus();
+    screen.getByRole("link", { name: "Model Lab" }).focus();
     fireEvent.keyDown(document, { key: "Escape" });
 
     expect(menu).toHaveAttribute("aria-expanded", "false");

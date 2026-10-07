@@ -17,8 +17,8 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: python -m pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.6,<3"
-      - run: python -m pip install -e ".[dev,research]"
-      - run: ruff check dail_llm tests
+      - run: python -m pip install -e ".[dev,research,qa]"
+      - run: ruff check dail_llm tests scripts
       - run: pytest -m "not integration"
 
   frontend:

@@ -7,8 +7,8 @@ from fastapi.testclient import TestClient
 from dail_llm.api.app import create_app
 from dail_llm.qa.answer import ask, citations_valid
 from dail_llm.qa.corpus import parse_debate
-from dail_llm.qa.index import SQLiteRetriever, index_corpus
-from scripts import download_debates
+from dail_llm.qa.index import D1Retriever, SQLiteRetriever, index_corpus
+from scripts import download_debates, publish_d1
 
 XML = b"""<akomaNtoso xmlns="http://docs.oasis-open.org/legaldocml/ns/akn/3.0/CSD13">
 <debate><meta><references><TLCPerson eId="Maeve" showAs="Maeve O'Neill" />
@@ -41,6 +41,27 @@ def test_citation_ids_must_be_retrieved():
                              "citation_ids": [passages[0].passage_id]}], passages)
     assert not citations_valid([{"text": "An invented claim", "citation_ids": ["fake"]}], passages)
     assert not citations_valid([{"text": "No citation", "citation_ids": []}], passages)
+
+
+def test_d1_shared_year_database_is_searched_once(monkeypatch):
+    monkeypatch.setenv("CLOUDFLARE_ACCOUNT_ID", "test-account")
+    monkeypatch.setenv("CLOUDFLARE_D1_READ_TOKEN", "test-token")
+    retriever = D1Retriever({2014: "first", 2015: "first", 2016: "second"}, {})
+    calls = []
+    monkeypatch.setattr(retriever, "_query", lambda database_id, sql, params:
+                        calls.append((database_id, params)) or [])
+
+    assert retriever.search("housing") == []
+    assert [database_id for database_id, _ in calls] == ["first", "second"]
+    calls.clear()
+    assert retriever.search("housing", "2015-01-01", "2015-12-31") == []
+    assert [database_id for database_id, _ in calls] == ["first"]
+    calls.clear()
+    assert retriever.search("Housing supply on 1 October 2015", "2015-10-01",
+                            "2015-10-01") == []
+    assert [params[0] for _, params in calls] == [
+        '"housing" AND "supply"', '"housing" OR "supply" OR "1" OR "october"',
+    ]
 
 
 def test_graph_returns_sources_without_model(tmp_path: Path, monkeypatch):
@@ -121,3 +142,28 @@ def test_downloader_idempotent_and_refresh_detects_revision(tmp_path: Path, monk
     assert (root / "raw" / "2025-06-01.xml").read_bytes() == first
     download_debates.download(day, day, root, refresh=True)
     assert (root / "raw" / "2025-06-01.xml").read_bytes() == content[0]
+
+
+def test_d1_import_state_is_per_year_with_shared_database(tmp_path: Path, monkeypatch):
+    raw = tmp_path / "raw"
+    raw.mkdir()
+    (raw / "2014-06-01.xml").write_bytes(XML)
+    (raw / "2015-06-01.xml").write_bytes(XML)
+    index = tmp_path / "index.sqlite"
+    index_corpus(raw, index)
+    calls = []
+
+    def fake_query(database_id, sql, params=None, usage=None):
+        calls.append(database_id)
+        if usage is not None and sql.startswith("INSERT"):
+            usage["rows_written"] += 1
+        return []
+
+    monkeypatch.setattr(publish_d1, "d1_query", fake_query)
+    first = publish_d1.publish(index, 2014, "shared", max_passages=1)
+    second = publish_d1.publish(index, 2015, "shared", max_passages=1)
+    assert first["complete"] and second["complete"]
+    assert first["rows_written_reported"] == second["rows_written_reported"] == 2
+    assert calls and set(calls) == {"shared"}
+    assert (tmp_path / "d1-upload-2014.json").exists()
+    assert (tmp_path / "d1-upload-2015.json").exists()

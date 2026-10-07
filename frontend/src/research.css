@@ -731,3 +731,16 @@
     transition: none;
   }
 }
+
+.research-main { padding-top: 140px; }
+.research-heading { padding-bottom: 24px; }
+.research-heading p { max-width: 62ch; color: #c0cec3; font-size: 16px; }
+.research-context { max-width: 76ch; margin: 0 0 30px; padding: 16px 19px; border-left: 2px solid var(--brass); background: #10251d; color: #becfc1; font-size: 13px; line-height: 1.65; }
+.research-context button { padding: 0; border: 0; color: var(--brass); background: transparent; font-size: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.research-tabs { gap: 12px 30px; }
+.research-tabs button { min-height: 52px; color: #c1cec4; }
+.research-view { padding-top: 48px; }
+.research-intro > p, .method-columns p, .research-note, .research-finding p { color: #bacabc; }
+.research-table { font-variant-numeric: tabular-nums; }
+.research-table caption { text-align: left; }
+@media (max-width: 780px) { .research-main { padding-top: 112px; } .research-context { margin-bottom: 20px; } }

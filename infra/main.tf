@@ -5,15 +5,10 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "5.25.0"
     }
-    vercel = {
-      source  = "vercel/vercel"
-      version = "5.17.1"
-    }
   }
 }
 
 provider "cloudflare" {}
-provider "vercel" {}
 
 variable "cloudflare_account_id" {
   description = "Cloudflare account for free D1 year shards. Set TF_VAR_cloudflare_account_id."
@@ -30,25 +25,44 @@ variable "last_year" {
   default = 2026
 }
 
-variable "vercel_project_name" {
-  type    = string
-  default = "dail-llm"
+variable "pilot_start_year" {
+  description = "Optional two-year shard start for a single-database sizing pilot."
+  type        = number
+  default     = null
 }
 
-variable "inspect_existing_vercel_project" {
-  type    = bool
-  default = false
+variable "existing_pilot_database_id" {
+  description = "Existing 2022-2023 D1 pilot, created outside Terraform. Terraform references but does not manage it."
+  type        = string
+  default     = "ec1bb53b-f607-4c81-8294-9683f4d8800d"
 }
 
-data "vercel_project" "existing" {
-  count = var.inspect_existing_vercel_project ? 1 : 0
-  name  = var.vercel_project_name
+locals {
+  shard_start_years = range(var.first_year, var.last_year + 1, 2)
+}
+
+check "free_d1_database_limit" {
+  assert {
+    condition     = var.first_year <= var.last_year && ceil((var.last_year - var.first_year + 1) / 2) <= 10
+    error_message = "Workers Free allows at most 10 D1 databases; use a valid range of no more than 20 years."
+  }
+}
+
+check "pilot_shard" {
+  assert {
+    condition     = var.pilot_start_year == null || contains(local.shard_start_years, var.pilot_start_year)
+    error_message = "pilot_start_year must be the first year of one configured two-year shard."
+  }
 }
 
 resource "cloudflare_d1_database" "debates" {
-  for_each     = toset([for year in range(var.first_year, var.last_year + 1) : tostring(year)])
+  # Two consecutive years per database keep the 2014-2026 corpus below the
+  # Workers Free limit of ten databases. Actual D1 sizes still need measuring.
+  for_each = toset([for year in local.shard_start_years : tostring(year)
+    if year != 2022 && (var.pilot_start_year == null || year == var.pilot_start_year)
+  ])
   account_id   = var.cloudflare_account_id
-  name         = "dail-debates-${each.key}"
+  name         = "dail-debates-${each.key}-${tonumber(each.key) + 1}"
   jurisdiction = "eu"
 
   lifecycle {
@@ -57,10 +71,10 @@ resource "cloudflare_d1_database" "debates" {
 }
 
 output "d1_database_ids" {
-  description = "Year-to-ID map for DAIL_D1_DATABASES after a reviewed apply."
-  value       = { for year, database in cloudflare_d1_database.debates : year => database.id }
-}
-
-output "existing_vercel_project_id" {
-  value = var.inspect_existing_vercel_project ? data.vercel_project.existing[0].id : null
+  description = "Year-to-ID map for DAIL_D1_DATABASES. The existing 2022-2023 pilot is referenced, not managed."
+  value = merge([for start in local.shard_start_years : {
+    for year in range(start, min(start + 2, var.last_year + 1)) :
+    tostring(year) => start == 2022 ? var.existing_pilot_database_id : cloudflare_d1_database.debates[tostring(start)].id
+    if var.pilot_start_year == null || start == var.pilot_start_year
+  }]...)
 }

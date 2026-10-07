@@ -781,8 +781,8 @@ export default function ChamberCanvas({
     >
       <CameraAim />
       <hemisphereLight args={["#d7d1bd", "#06100c", 1.3]} />
-      <directionalLight position={[4.8, 6.5, 5.5]} intensity={2.75} color="#f0dfba" />
-      <directionalLight position={[-4.5, 3.2, 1.5]} intensity={1.15} color="#4b9f7d" />
+      <directionalLight position={[4.8, 6.5, 5.5]} intensity={3} color="#f2e4c5" />
+      <directionalLight position={[-4.5, 3.2, 1.5]} intensity={1.45} color="#6eb99a" />
       <directionalLight position={[0, 4.2, -5]} intensity={1.4} color="#c9a55c" />
       <pointLight position={[0, 2.2, -2.25]} intensity={6} distance={6.5} color="#c9a55c" />
       <Chamber

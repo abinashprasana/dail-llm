@@ -2,6 +2,7 @@ import { ArrowRight, ArrowUpRight, Download, RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { SiteHeader } from "../components/SiteHeader";
+import { SiteFooter } from "../components/SiteFooter";
 import {
   characterLabel,
   fetchJSON,
@@ -101,9 +102,9 @@ function Overview({ summary }: { summary: Summary }) {
     <>
       <div className="research-intro">
         <h2>
-          Two questions.
+          Two research questions
           <br />
-          <em>One traceable experiment.</em>
+          <em>One documented pilot</em>
         </h2>
         <p>
           Can a small memory of speeches help a character model? And how well
@@ -150,9 +151,9 @@ function Overview({ summary }: { summary: Summary }) {
       <div className="research-finding">
         <span className="research-kicker">What the pilot tells us</span>
         <h3>
-          The measurement works.
+          The baseline leads
           <br />
-          The improvement is still an open question.
+          The proposed gains remain uncertain
         </h3>
         <p>
           The five-gram baseline outperformed the transformers at this training
@@ -367,7 +368,7 @@ function MemoryView({ summary }: { summary: Summary }) {
         <h2>
           A prediction with
           <br />
-          <em>its sources in view.</em>
+          <em>its sources in view</em>
         </h2>
         <p>
           Memory adds evidence from nearby character contexts. Choose a
@@ -681,7 +682,7 @@ function HistoryView({ summary }: { summary: Summary }) {
         <h2>
           Language across
           <br />
-          <em>a change of government.</em>
+          <em>a change of government</em>
         </h2>
         <p>
           A case study around the 2011 transition. The comparisons account for
@@ -848,7 +849,7 @@ function MethodsView({ summary }: { summary: Summary }) {
         <h2>
           Every result
           <br />
-          <em>has a record.</em>
+          <em>has a record</em>
         </h2>
         <p>
           Configuration, corpus selection, checkpoints, and memory are bound
@@ -1031,8 +1032,7 @@ export default function ResearchPage() {
             <span className="research-kicker">Dáil LLM</span>
             <h1>Research</h1>
             <p>
-              Speech memory, historical evaluation, and the evidence behind each
-              comparison.
+              Compare speech memory and historical change in a separate pilot. Review the results, examples, and methods together.
             </p>
           </div>
           <div className="research-run-label">
@@ -1045,6 +1045,7 @@ export default function ResearchPage() {
             )}
           </div>
         </header>
+        <p className="research-context">These pilot models use selected 2008–2011 debates. Their results are separate from the 1950 model in the Lab. <button type="button" onClick={() => setSearch({ view: "methods" })}>Read the methods ↗</button></p>
         <div
           className="research-tabs"
           role="tablist"
@@ -1121,6 +1122,7 @@ export default function ResearchPage() {
           </Link>
         </footer>
       </main>
+      <SiteFooter />
     </div>
   );
 }

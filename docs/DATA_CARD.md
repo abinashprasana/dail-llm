@@ -2,6 +2,8 @@
 
 Measured on 3 October 2026 from the [Oireachtas debates API](https://api.oireachtas.ie/v1/debates) and its linked Official Report XML. The API was queried month by month from 1 January 2014 through 3 October 2026. Records whose chamber URI ended in `/house/dail` were retained. The latest returned Dáil date was **1 October 2026**. Parliamentary questions published separately after July 2012 are outside this corpus.
 
+An incremental API check for 2–5 October 2026 returned zero additional Dáil debate records. The observed latest date remains **1 October 2026**; this is a point-in-time result, not a promise that the source will not be revised.
+
 | Year | Dáil XML records | Parsed speeches |
 | --- | ---: | ---: |
 | 2014 | 124 | 47,373 |

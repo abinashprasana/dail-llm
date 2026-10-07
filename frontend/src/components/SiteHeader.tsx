@@ -3,12 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Seal } from "./Seal";
 
-const links = [
-  { label: "Model", href: "/#model" },
-  { label: "Data", href: "/#data" },
-  { label: "Evidence", href: "/#evidence" },
-];
-
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
@@ -51,18 +45,11 @@ export function SiteHeader() {
         </button>
 
         <nav id="primary-navigation" className={`site-nav ${open ? "is-open" : ""}`} aria-label="Primary navigation">
-          {links.map((link) => (
-            <a key={link.label} href={link.href} onClick={() => setOpen(false)}>{link.label}</a>
-          ))}
-          <Link to="/research" aria-current={pathname === "/research" ? "page" : undefined} onClick={() => setOpen(false)}>Research</Link>
           <Link to="/ask" aria-current={pathname === "/ask" ? "page" : undefined} onClick={() => setOpen(false)}>Ask the debates</Link>
-          <Link
-            className={`nav-lab ${pathname === "/lab" ? "is-active" : ""}`}
-            to="/lab"
-            onClick={() => setOpen(false)}
-          >
-            Open model lab
-          </Link>
+          <Link to="/lab" aria-current={pathname === "/lab" ? "page" : undefined} onClick={() => setOpen(false)}>Model Lab</Link>
+          <Link to="/research" aria-current={pathname === "/research" ? "page" : undefined} onClick={() => setOpen(false)}>Research</Link>
+          <a href="/#data" onClick={() => setOpen(false)}>Data</a>
+          <Link className="nav-home" to="/" aria-current={pathname === "/" ? "page" : undefined} onClick={() => setOpen(false)}>Overview</Link>
         </nav>
         </div>
       </header>
