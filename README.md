@@ -8,14 +8,10 @@
 [![PyTorch](https://img.shields.io/badge/Model-PyTorch-1F4D3B?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
 [![Vercel](https://img.shields.io/badge/Site-Vercel-111827?style=for-the-badge&logo=vercel&logoColor=white)](https://dail-llm.vercel.app/)
 [![Q&A status](https://img.shields.io/badge/Public%20Q%26A-Release%20gated-9B792C?style=for-the-badge)](#public-qa-status)
-
 <br/>
-
-[![LangChain retrieval](https://img.shields.io/badge/LangChain-Retrieval-1F4D3B?style=flat-square)](#qa-tooling)
-[![LangGraph flow](https://img.shields.io/badge/LangGraph-Q%26A%20flow-1F4D3B?style=flat-square)](#qa-tooling)
-[![Langfuse tracing](https://img.shields.io/badge/Langfuse-Wired-9B792C?style=flat-square)](#qa-tooling)
-[![LangSmith experiments](https://img.shields.io/badge/LangSmith-Pending-9B792C?style=flat-square)](#qa-tooling)
-[![Terraform plan](https://img.shields.io/badge/Terraform-Plan%20only-5B6470?style=flat-square&logo=terraform&logoColor=white)](#qa-tooling)
+[![LangChain retrieval](https://img.shields.io/badge/LangChain-Retrieval-1F4D3B?style=for-the-badge&logo=langchain&logoColor=white)](#qa-tooling)
+[![LangGraph flow](https://img.shields.io/badge/LangGraph-Q%26A%20flow-1F4D3B?style=for-the-badge&logo=langgraph&logoColor=white)](#qa-tooling)
+[![Langfuse tracing][badge-langfuse]](#qa-tooling)
 
 [**Open the site ↗**](https://dail-llm.vercel.app/) · [**Run locally**](#run-the-application) · [**See results**](#results-and-limits) · [**Tool status**](#qa-tooling)
 
@@ -241,8 +237,8 @@ Raw downloads, generated indices, and research run directories are ignored by Gi
 | **LangChain** | Wraps retrieved passages as documents through a retriever interface in the [Q&A flow](dail_llm/qa/answer.py). | Used by local Q&A. |
 | **LangGraph** | Runs retrieval, one retry, evidence checking, and answer or refusal in the [same flow](dail_llm/qa/answer.py). | Used by local Q&A. |
 | **Langfuse** | Has callbacks and a prompt version wired into that flow. | No cloud trace recorded; credentials are still needed. |
-| **LangSmith** | Has a [named evaluation path](scripts/evaluate_qa.py) that requires independently reviewed questions. | No experiment run yet. |
-| **Terraform** | Describes proposed free-tier D1 resources in [`infra/`](infra/README.md). | Formatted, validated, and planned offline; never applied. |
+| **LangSmith** | Has a [named evaluation path](scripts/evaluate_qa.py) that requires independently reviewed questions. | No experiment run yet. It needs a `LANGSMITH_API_KEY` and a human-reviewed question set; all 52 current candidates are unreviewed, so the upload refuses them. |
+| **Terraform** | Describes proposed free-tier D1 resources in [`infra/`](infra/README.md). | Formatted, validated, and planned offline; never applied. Applying creates databases in a real Cloudflare account, so it waits for a scoped API token and the owner's explicit approval. |
 
 These tools belong to the debate Q&A path. The character model in Model Lab runs separately. See [Q&A evaluation status](eval/README.md) and [infrastructure measurements](infra/README.md) for the remaining release work.
 
@@ -282,3 +278,6 @@ The [infrastructure notes](infra/README.md) describe a free Cloudflare D1 pilot 
 ---
 
 **Author:** Abinash Prasana Selvanathan
+
+<!-- shields.io has no Langfuse icon, so the badge embeds the official one from the langfuse/langfuse repository (web/public/icon.svg). -->
+[badge-langfuse]: https://img.shields.io/badge/Langfuse-Wired-9B792C?style=for-the-badge&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjQ4IDQ4IDQxNiA0MTYiPjxwYXRoIGQ9Ik0yNTUgMzAyTDI4NSAzMjdDMjg1IDMyNyAzMDkgMzA5IDMyNiAzMDdDMzQ0IDMwNCAzNjMgMzE0IDM4MSAzMjZDNDA4IDM0NCA0MzAgMzY3IDQzMCAzNjdMNDU3IDM0MUM0NTcgMzQxIDM4NCAyNjIgMzI2IDI2OUMyODggMjc0IDI1NSAzMDIgMjU1IDMwMlpNMjU2IDIwOUwyODUgMTg1QzI4NSAxODUgMzA5IDIwMiAzMjYgMjA1QzM0NCAyMDcgMzYzIDE5NyAzODEgMTg1QzQwOCAxNjcgNDMwIDE0NCA0MzAgMTQ0TDQ1NyAxNzBDNDU3IDE3MCAzODQgMjQ5IDMyNiAyNDJDMjg4IDIzOCAyNTYgMjA5IDI1NiAyMDlaTTE4NiAxMzBDMjI0IDEzMCAyNTUgMTYyIDI1NSAxNjJDMjU1IDE2MiAyNDYgMTY5IDI0MSAxNzRDMjM1IDE3OSAyMjUgMTg2IDIyNSAxODZDMjI1IDE4NiAyMDkgMTY5IDE4NiAxNjlDMTc3IDE2OSAxNjUgMTc0IDE1MiAxODVDMTQyIDE5NCAxMzIgMjA0IDEyNSAyMTdDMTE5IDIyOSAxMTYgMjQyIDExNiAyNTZDMTE1IDI3MyAxMjIgMjkyIDEzMiAzMDZDMTM5IDMxNiAxNDcgMzIzIDE1NSAzMzBDMTY2IDMzOCAxNzggMzQ0IDE4NiAzNDRDMTk1IDM0NCAyMDMgMzQxIDIwOSAzMzhDMjE5IDMzMiAyMjYgMzI2IDIyNiAzMjZMMjU2IDM1MEMyNTYgMzUwIDI0NCAzNjIgMjI3IDM3MUMyMTcgMzc3IDIwMyAzODIgMTg2IDM4MkMxNzAgMzgyIDE1MCAzNzMgMTMyIDM1OUMxMjEgMzUwIDEwOSAzNDAgMTAwIDMyN0M4NiAzMDYgNzggMjgxIDc4IDI1NkM3OCAyMzAgODcgMjA1IDEwMSAxODRDMTI0IDE1NCAxNTggMTMwIDE4NiAxMzBaIiBmaWxsPSIjRkY1RDVGIi8%2BPHBhdGggZD0iTTgwIDE1MUw1NSAxNzlDNTUgMTc5IDEyNSAyNDQgMTgwIDI0NEMyMDUgMjQ0IDIzOSAyMjQgMjY5IDE5OUMyODYgMTg0IDMwNSAxNjggMzI0IDE2OEMzMzcgMTY4IDM1NCAxNzUgMzcwIDE5MkMzNzAgMTkyIDM4MCAxODYgMzg2IDE4MkMzOTIgMTc4IDQwMCAxNzEgNDAwIDE3MUMzNzcgMTQ3IDM0NCAxMjkgMzI0IDEzMUMyOTIgMTMxIDI2OSAxNTEgMjQxIDE3NEMyMTIgMTk3IDIwMCAyMDYgMTgwIDIwNkMxNDUgMjA2IDgwIDE1MSA4MCAxNTFaTTgwIDM2MUw1NSAzMzNDNTUgMzMzIDEyNSAyNjggMTgwIDI2OEMyMDUgMjY4IDIzOSAyODggMjY5IDMxM0MyODYgMzI4IDMwNSAzNDQgMzI0IDM0NEMzMzcgMzQ0IDM1NCAzMzcgMzcwIDMxOUMzNzAgMzE5IDM3OSAzMjUgMzg1IDMyOUMzOTEgMzMzIDQwMCAzNDAgNDAwIDM0MEMzNzcgMzY1IDM0NCAzODMgMzI0IDM4MUMyOTIgMzgxIDI3MyAzNjQgMjQ1IDM0MUMyMTYgMzE4IDIwMCAzMDYgMTgwIDMwNkMxNDUgMzA2IDgwIDM2MSA4MCAzNjFaTTQwNiAyMTNDNDAwIDIxOCAzODkgMjI0IDM4OSAyMjRDMzg5IDIyNCAzOTUgMjM3IDM5NSAyNTVDMzk1IDI3MiAzOTAgMjg3IDM5MCAyODdDMzkwIDI4NyAzOTkgMjkzIDQwNSAyOTdDNDEyIDMwMiA0MjEgMzA5IDQyMSAzMDlDNDIxIDMwOSA0MzMgMjg1IDQzMyAyNTVDNDMzIDIyNSA0MjEgMjAyIDQyMSAyMDJDNDIxIDIwMiA0MTIgMjA5IDQwNiAyMTNaIiBmaWxsPSIjNEU5Q0ZGIi8%2BPC9zdmc%2B
