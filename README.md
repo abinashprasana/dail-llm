@@ -13,13 +13,25 @@
 [![LangGraph flow](https://img.shields.io/badge/LangGraph-Q%26A%20flow-1F4D3B?style=for-the-badge&logo=langgraph&logoColor=white)](#qa-tooling)
 [![Langfuse tracing][badge-langfuse]](#qa-tooling)
 
-[**Open the site ↗**](https://dail-llm.vercel.app/) · [**Run locally**](#run-the-application) · [**See results**](#results-and-limits) · [**Tool status**](#qa-tooling)
+[**Open the site ↗**](https://dail-llm.vercel.app/) · [**Run locally**](#run-the-application) · [**See results**](#results) · [**Limitations**](#limitations)
 
 </div>
 
 ---
 
-## 📖 Three ways to explore
+## 📖 What this project is
+
+Dáil LLM began as a character-level transformer written from scratch in PyTorch, trained on Irish parliamentary speeches to understand how these models actually work. It has since gained two companions: a way to ask questions of the real Official Report with links back to the original debate, and a separate research study of speech memory and historical change. The three are kept apart on purpose, each with its own data and its own claims.
+
+| At a glance | |
+| --- | --- |
+| **In one line** | A small character model, a source-first debate search, and a research pilot, each documented with what it can and cannot show. |
+| **The problem** | A model that writes fluent Dáil-style text says nothing reliable about what was actually said. Questions about the record need sources, and sometimes the right answer is "not enough evidence". |
+| **The approach** | The character model stays a model of language, never a source of facts. Questions go through retrieval first: passages are found and checked, then answered with citations or refused. |
+| **What is built** | Three surfaces (below), served by one FastAPI app and a React site. |
+| **Status** | Model Lab and Research are live. Public debate search is release gated and currently switched off (see [Limitations](#limitations)). |
+
+## 🧭 Three ways to explore
 
 | Route | What it shows | Evidence |
 | --- | --- | --- |
@@ -27,21 +39,7 @@
 | [**Model Lab**](https://dail-llm.vercel.app/lab) (`/lab`) | Continues a prompt one character at a time and displays attention and evaluation results | A 3.27 million parameter model trained on 9,080 speeches dated 15 February–25 April 1950 |
 | [**Research**](https://dail-llm.vercel.app/research) (`/research`) | Explores speech memory and historical comparisons | A separate CPU pilot using selected 2008–2011 debates |
 
-The public site serves Home, Model Lab, Research, and `/ask`. In the last verified deployment check, its Q&A API reported no public debate index, so the Ask page disabled search. A local index can enable it on a local deployment. Public Q&A still needs citation review, an independently checked evaluation, and free-tier sizing before launch. [See the release criteria](eval/README.md).
-
-The character model generates text but was never trained to answer questions. The Research pilot uses a different dataset and checkpoint. Ask the debates retrieves sources and only generates an answer when evidence and the connected service allow it.
-
-## ⚡ At a glance
-
-| Served character model | Recorded value |
-| --- | ---: |
-| Speeches used | **9,080** from 15 February–25 April 1950 |
-| Parameters | **3,271,168** |
-| Held-out perplexity | **4.07** |
-| Held-out bits per character | **2.024** |
-| Next-character accuracy | **58.67%** |
-
-These are next-character prediction metrics, not factual accuracy. They come from the saved [evaluation](outputs/evaluation_results.json) and [dataset manifest](outputs/dataset_manifest.json).
+The character model generates text but was never trained to answer questions, and the Research pilot uses a different dataset and checkpoint.
 
 ## 🗃️ Data and provenance
 
@@ -108,58 +106,88 @@ flowchart TD
 
 The diagram follows the current [model implementation](dail_llm/model/transformer.py). A causal mask prevents each position from seeing later characters.
 
-<a id="results-and-limits"></a>
+<a id="qa-tooling"></a>
 
-## 📊 Results and limits
+## 🔎 How grounded Q&A works
 
-| Study | Observation | How to read it |
+Ask the debates answers only from what it retrieves. Each question is searched against an index of Official Report passages (a local SQLite full-text index, or free-tier Cloudflare D1 shards when connected). The evidence is graded, a failed search is retried once, and the result is either an answer with citations or a plain refusal. If no answer model is configured, or its citations do not check out against the retrieved passages, Ask returns the cited excerpts instead.
+
+```mermaid
+flowchart LR
+    Q["Question"] --> R["Retrieve passages"]
+    R --> G{"Enough evidence?"}
+    G -->|yes| A["Answer with citations<br/>or cited excerpts"]
+    G -->|no, first try| T["Retry once"] --> R
+    G -->|no, after retry| X["Refuse:<br/>insufficient evidence"]
+```
+
+| Tool | Role here |
+| --- | --- |
+| **LangChain** | Wraps retrieved passages as documents through a retriever interface in the [Q&A flow](dail_llm/qa/answer.py). |
+| **LangGraph** | Runs the retrieve, grade, retry, and answer or refuse steps in the [same flow](dail_llm/qa/answer.py). |
+| **Langfuse** | Optional tracing. Callbacks and a prompt version are wired in and switch on only when both Langfuse keys are set. |
+
+These tools belong to the debate Q&A path. The character model in Model Lab runs separately.
+
+<a id="results"></a>
+
+## 📊 Results
+
+The served 1950 checkpoint, measured on held-out text. These are next-character prediction metrics, not factual accuracy. They come from the saved [evaluation](outputs/evaluation_results.json) and [dataset manifest](outputs/dataset_manifest.json).
+
+| Metric | Value |
+| --- | ---: |
+| Speeches used | **9,080** (15 February–25 April 1950) |
+| Parameters | **3,271,168** |
+| Perplexity | **4.07** |
+| Bits per character | **2.024** |
+| Next-character accuracy | **58.67%** |
+| Cross-entropy | **1.4030** |
+
+| Other study | Observation | How to read it |
 | --- | --- | --- |
-| Served 1950 checkpoint | **4.07** perplexity; **2.024** bits/character; **58.67%** next-character accuracy | Held-out character prediction. It does not test whether generated statements are true. |
 | Research pilot, earlier split | Witten–Bell five-gram: **1.8572** bits/character; unconditioned decoder: **3.5646** | Lower is better **within this pilot**. Its scores cannot be compared directly with the served checkpoint's 2.024. |
-| Speech-memory and historical comparisons | No clear speech-memory gain; one matched historical pair | The short CPU run and small comparison do not support a broader claim. |
+| Speech memory and historical comparison | No clear speech-memory gain; one matched historical pair | The short CPU run and small comparison do not support a broader claim. |
 
-The character model can produce broken or incorrect prose. Retrieved debate passages show what speakers said, not whether their claims were true. When answer generation is unavailable, Ask returns cited excerpts. [Pilot methods and limits](docs/pilot-results.md) · [Research reproduction guide](docs/research.md) · [Q&A evaluation record](eval/README.md).
-
-The served checkpoint's held-out cross-entropy is **1.4030**. Its five saved samples contain no repeated word trigrams, but that small check does not mean the model cannot repeat or loop. [See every recorded metric](outputs/evaluation_results.json).
-
-### 🎙️ Generated samples
-
-These are model output, **not** parliamentary quotations. They were generated with the saved checkpoint, seed 42, temperature 0.8, and 200 new characters per prompt. The odd phrasing is part of the result. [Raw results and settings](outputs/evaluation_results.json).
+[Pilot methods and limits](docs/pilot-results.md) · [Research reproduction guide](docs/research.md) · [Q&A evaluation record](eval/README.md).
 
 <details>
-<summary>Prompt: “The Minister for”</summary>
+<summary>🎙️ Generated samples (model output, not parliamentary quotations)</summary>
 
+Generated with the saved checkpoint, seed 42, temperature 0.8, and 200 new characters per prompt. The odd phrasing is part of the result. [Raw results and settings](outputs/evaluation_results.json).
+
+**“The Minister for”**
 > The Minister for the lay pig. There arrangements who are in principles. I should like to this House did not use of bad and he can sit would be likely to develop that, but who is not raise some similar, goodwill any s
 
-</details>
-
-<details>
-<summary>Prompt: “In this House”</summary>
-
+**“In this House”**
 > In this House or the parties officer holiday, qualities of people of the Minister is already at the moment the promission, that is necessary. So far a line that the commission power is against the net pursue in th
 
-</details>
-
-<details>
-<summary>Prompt: “The question before us”</summary>
-
+**“The question before us”**
 > The question before used the Dáil to call only be a decisions at the bagance that is impossible to civil servants abte the development of the cost of the words' that least was productly about the Dublin that the Bill the c
 
-</details>
-
-<details>
-<summary>Prompt: “I wish to raise”</summary>
-
+**“I wish to raise”**
 > I wish to raise that agricultural wages throwners and I hope for it sub-section meet used for that matters are not being relieved, if we were to the complete when the State far a holiday of the land artificattion, o
 
-</details>
-
-<details>
-<summary>Prompt: “On the matter of”</summary>
-
+**“On the matter of”**
 > On the matter of this Bill commissioners. I will referred to find performed could have able to give the tribunal year and go in the concerned better the schedwer of a manufacturer. So that is pit at a largely whom a
 
 </details>
+
+## 📁 Project map
+
+```text
+dail_llm/
+├── dail_llm/       Character model, FastAPI, Research, and Q&A code
+├── frontend/       React site: Home, Ask, Lab, Research
+├── scripts/        Incremental debate downloader and supporting scripts
+├── eval/           Q&A questions, results, and release criteria
+├── outputs/        Saved model evaluation and dataset manifest
+├── docs/           Methods, data card, audit, and UI specification
+├── infra/          Free-tier infrastructure proposal
+└── tests/          Python API, data, and retrieval checks
+```
+
+Raw downloads, generated indices, and research run directories are ignored by Git. The recorded Research examples are checked in so that page remains inspectable without a live research service. [Research interface guide](docs/research-ui.md) · [UI design specification](docs/UI_DESIGN_SPEC.md).
 
 <a id="run-the-application"></a>
 
@@ -193,8 +221,6 @@ python train_pipeline.py
 
 This extracts the 1950 subset, builds the splits, trains, and evaluates. It skips extraction if `dataverse_files/dail_debates_clean.txt` already exists. Training takes substantially longer than opening the included checkpoint. The configuration is in [`dail_llm/config.py`](dail_llm/config.py); the resulting corpus manifest and evaluation are in [`outputs/`](outputs/).
 
-The extractor keeps speeches of at least 50 characters and excludes speeches with more than 40% non-ASCII characters. That threshold is **not** a language detector. The original archive covers 1919–2013, while this checkpoint uses only ten weeks in 1950. The repository's [dataset manifest](outputs/dataset_manifest.json) records the actual selected dates, speech count, and source hash.
-
 </details>
 
 <details>
@@ -208,41 +234,11 @@ python -m scripts.download_debates --start 2014-01-01
 python -m dail_llm.qa.index
 ```
 
-The downloader saves XML and a SHA-256 manifest under ignored `data/oireachtas/`; reruns reuse unchanged records. Use `--refresh` with a bounded date range to check for revised XML. The SQLite FTS index is `data/oireachtas/passages.sqlite`. Start the API again and `/ask` will report the coverage of that connected index. The [data card](docs/DATA_CARD.md) records one measured local snapshot, its gaps, and the source-link rules. Separately published parliamentary questions are outside this debate index.
+The downloader saves XML and a SHA-256 manifest under ignored `data/oireachtas/`; reruns reuse unchanged records. Use `--refresh` with a bounded date range to check for revised XML. The SQLite FTS index is `data/oireachtas/passages.sqlite`. Start the API again and `/ask` will report the coverage of that connected index. The [data card](docs/DATA_CARD.md) records one measured local snapshot, its gaps, and the source-link rules.
 
 </details>
 
-## 📁 Project map
-
-```text
-dail_llm/
-├── dail_llm/       Character model, FastAPI, Research, and Q&A code
-├── frontend/       React site: Home, Ask, Lab, Research
-├── scripts/        Incremental debate downloader and supporting scripts
-├── eval/           Q&A questions, results, and release criteria
-├── outputs/        Saved model evaluation and dataset manifest
-├── docs/           Methods, data card, audit, and UI specification
-├── infra/          Free-tier infrastructure proposal
-└── tests/          Python API, data, and retrieval checks
-```
-
-Raw downloads, generated indices, and research run directories are ignored by Git. The recorded Research examples are checked in so that page remains inspectable without a live research service. [Research interface guide](docs/research-ui.md) · [UI design specification](docs/UI_DESIGN_SPEC.md).
-
-<a id="qa-tooling"></a>
-
-## 🧩 Tools behind Q&A
-
-| Tool | What it does here | Status |
-| --- | --- | --- |
-| **LangChain** | Wraps retrieved passages as documents through a retriever interface in the [Q&A flow](dail_llm/qa/answer.py). | Used by local Q&A. |
-| **LangGraph** | Runs retrieval, one retry, evidence checking, and answer or refusal in the [same flow](dail_llm/qa/answer.py). | Used by local Q&A. |
-| **Langfuse** | Has callbacks and a prompt version wired into that flow. | No cloud trace recorded; credentials are still needed. |
-| **LangSmith** | Has a [named evaluation path](scripts/evaluate_qa.py) that requires independently reviewed questions. | No experiment run yet. It needs a `LANGSMITH_API_KEY` and a human-reviewed question set; all 52 current candidates are unreviewed, so the upload refuses them. |
-| **Terraform** | Describes proposed free-tier D1 resources in [`infra/`](infra/README.md). | Formatted, validated, and planned offline; never applied. Applying creates databases in a real Cloudflare account, so it waits for a scoped API token and the owner's explicit approval. |
-
-These tools belong to the debate Q&A path. The character model in Model Lab runs separately. See [Q&A evaluation status](eval/README.md) and [infrastructure measurements](infra/README.md) for the remaining release work.
-
-## 🔌 API and checks
+### API and checks
 
 FastAPI serves the built React site at `/`. The interactive endpoint list is at `/api/docs` when the server is running.
 
@@ -267,13 +263,36 @@ pnpm run build
 pnpm run test:e2e
 ```
 
-The browser suite uses mocked Q&A responses and covers responsive layouts, keyboard use, reduced motion, and the Research views. Passing it does not prove that public search is deployed. [Verification record](docs/ui-verification.md) · [Repository audit](docs/AUDIT.md).
+The browser suite uses mocked Q&A responses, so passing it does not prove that public search is deployed. [Verification record](docs/ui-verification.md) · [Repository audit](docs/AUDIT.md).
+
+<a id="limitations"></a>
+
+## ⚠️ Limitations
+
+**Model Lab (the character model)**
+
+- It predicts characters, not facts. Its output can be incoherent or wrong, and the evaluation measures prediction rather than truth.
+- It was trained on a small slice: ten weeks of 1950 (9,080 speeches, 3.27 million parameters, a 256-character context). It does not represent the 1919–2013 archive or modern debate.
+- The non-ASCII filter is not a language detector, so language filtering is approximate.
+- Its five saved samples contain no repeated word trigrams, but that small check does not show the model cannot repeat or loop.
 
 <a id="public-qa-status"></a>
 
-### Public Q&A status
+**Ask the debates**
 
-The [infrastructure notes](infra/README.md) describe a free Cloudflare D1 pilot with **30 passages** for checking search, direct links, and Irish fadas. That pilot is not the complete corpus. Terraform describes proposed free-tier resources and has not been applied. Langfuse tracing and LangSmith experiments still need credentials and a reviewed evaluation set. The public Ask page must use the connected API's actual coverage; it does not claim that the larger local corpus is online.
+- Public search is release gated. At the last check, the live site's Q&A API reported no debate index (`available: false`), so the Ask page disables search. A local index enables it on a local deployment.
+- Launch still needs citation review, an independently checked evaluation set, and free-tier sizing. The 52 current evaluation candidates are unreviewed and easier than real questions, and the Cloudflare D1 pilot holds only 30 passages. See the [evaluation record](eval/README.md) and [infrastructure notes](infra/README.md).
+- Retrieved passages show what speakers said, not whether it was true.
+- Coverage depends on the connected index: Official Report debates from 2014 onward, without separately published parliamentary questions.
+
+**Research**
+
+- The pilot is a short CPU run on selected 2008–2011 debates with one training seed. It shows no clear speech-memory gain, finds only one matched historical pair, and its five-gram baseline beats the briefly trained decoders. Treat it as exploratory. [Pilot results](docs/pilot-results.md).
+
+**Not done yet**
+
+- No Langfuse cloud trace or LangSmith experiment has been recorded. Both need credentials, and LangSmith also needs a human-reviewed question set.
+- The Terraform description of free-tier Cloudflare D1 shards has been planned offline but never applied.
 
 ---
 
