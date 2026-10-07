@@ -10,7 +10,7 @@ Explore Dáil Éireann debates through three separate tools: sourced debate sear
 
 [Open the public site](https://dail-llm.vercel.app/) · [Read the interface specification](docs/UI_DESIGN_SPEC.md)
 
-The public site currently serves the earlier Home design and Model Lab. The redesigned interface in this repository has not been deployed there. The public `/ask` route still resolves to the old Home page. Q&A remains local while citation review, an independently checked evaluation, free-tier sizing, and a deployed smoke test are outstanding.
+The public site serves the redesigned Home, Model Lab, Research, and `/ask` pages. Its Q&A API currently reports that debate search is unavailable because no public index is connected; the Ask page disables search accordingly. Public Q&A still needs citation review, an independently checked evaluation, and free-tier sizing before launch.
 
 ## What the measurements show
 
